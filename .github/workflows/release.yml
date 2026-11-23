@@ -34,6 +34,7 @@ jobs:
       - uses: actions/download-artifact@v4
         with: { name: dist, path: dist }
       - uses: pypa/gh-action-pypi-publish@release/v1
+        with: { skip-existing: true }
 
   github-release:
     needs: build
@@ -66,8 +67,8 @@ jobs:
           push: true
           platforms: linux/amd64,linux/arm64
           tags: |
-            ghcr.io/${{ github.repository_owner }}/ragops-observatory:${{ github.ref_name }}
-            ghcr.io/${{ github.repository_owner }}/ragops-observatory:latest
+            ghcr.io/arathis1/ragops-observatory:${{ github.ref_name }}
+            ghcr.io/arathis1/ragops-observatory:latest
 
   npm:
     # optional: set the repository variable PUBLISH_NPM=true and the secret NPM_TOKEN to publish @ragops/sdk
