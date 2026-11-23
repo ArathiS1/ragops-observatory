@@ -1,7 +1,7 @@
 site_name: RAGOps Observatory
 site_description: Prove your RAG works. Stage diagnosis, evidence graph, release guardian and assurance reports for RAG systems.
 site_author: Arathi S
-site_url: https://arathis1.github.io/ragops-observatory/
+site_url: https://arathis1.github.io/ragops-observatory/docs/
 repo_url: https://github.com/ArathiS1/ragops-observatory
 repo_name: ArathiS1/ragops-observatory
 edit_uri: edit/main/docs/

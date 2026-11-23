@@ -1,6 +1,6 @@
 name: Docs website
 on:
-  push: { branches: [main], paths: ["docs/**", "mkdocs.yml", "README.md"] }
+  push: { branches: [main], paths: ["docs/**", "website/**", "mkdocs.yml", "README.md", ".github/workflows/docs.yml"] }
   workflow_dispatch:
 permissions: { contents: read, pages: write, id-token: write }
 concurrency: { group: pages, cancel-in-progress: true }
@@ -11,9 +11,12 @@ jobs:
       - uses: actions/checkout@v4
       - uses: actions/setup-python@v5
         with: { python-version: "3.12" }
-      - run: pip install "mkdocs-material>=9.5" "mkdocs<2" && mkdocs build --strict
+      - run: pip install "mkdocs-material>=9.5" "mkdocs<2"
+      # docs go to /docs/, the hand-made landing page to the site root
+      - run: mkdocs build --strict -d _site/docs
+      - run: cp -r website/. _site/
       - uses: actions/upload-pages-artifact@v3
-        with: { path: site }
+        with: { path: _site }
   deploy:
     needs: build
     runs-on: ubuntu-latest

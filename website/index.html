@@ -1,0 +1,305 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>RAGOps Observatory: find the stage where your RAG breaks</title>
+<meta name="description" content="Open-source reliability platform for RAG: find which stage fails and why, block worse releases, and issue Ready / Not ready assurance reports.">
+<meta property="og:title" content="RAGOps Observatory">
+<meta property="og:description" content="Find the stage where your RAG breaks, block worse releases, and prove it with a Ready / Not ready report.">
+<meta name="theme-color" content="#0a1120">
+<link rel="canonical" href="https://arathis1.github.io/ragops-observatory/">
+<meta property="og:type" content="website">
+<meta property="og:url" content="https://arathis1.github.io/ragops-observatory/">
+<meta property="og:image" content="https://arathis1.github.io/ragops-observatory/docs/images/social-preview.png">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:image" content="https://arathis1.github.io/ragops-observatory/docs/images/social-preview.png">
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 16 16'%3E%3Ccircle cx='8' cy='8' r='6.5' fill='none' stroke='%23f2b84b' stroke-width='2'/%3E%3Ccircle cx='8' cy='8' r='2.2' fill='%23f2b84b'/%3E%3C/svg%3E">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Instrument+Serif:ital@0;1&family=Manrope:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="style.css">
+</head>
+<body>
+<a class="skip" href="#main">Skip to content</a>
+
+<header class="nav"><div class="wrap">
+  <a class="brand" href="./"><span class="lens" aria-hidden="true"></span>RAGOps Observatory</a>
+  <nav aria-label="Main">
+    <a href="#explore">Dashboard</a>
+    <a href="#loop">How it works</a>
+    <a href="#proof">Real result</a>
+    <a href="#fit">Where it fits</a>
+    <a href="docs/">Docs</a>
+    <a class="nav-gh" href="https://github.com/ArathiS1/ragops-observatory">&#9733; GitHub<span id="stars" hidden></span></a>
+  </nav>
+</div></header>
+
+<main id="main">
+
+<!-- HERO -->
+<section class="hero">
+  <div class="sky" aria-hidden="true"></div>
+  <div class="wrap">
+    <p class="kicker"><span class="pulse" aria-hidden="true"></span>Open source, MIT licensed, self-hosted</p>
+    <h1>Find the stage where your RAG <em>breaks</em>, and prove the fix before you ship.</h1>
+    <p class="sub">RAGOps Observatory follows every answer through retrieval, ranking and generation. It names the stage that failed and what to change, blocks a version that is worse than the live one, and signs a Ready or Not ready report you can hand to a client.</p>
+    <div class="cta">
+      <a class="btn btn-sun" href="#start">Run it yourself</a>
+      <a class="btn btn-ghost" href="docs/case-studies/my-rag/">Read the case study</a>
+      <div class="install">
+        <code id="install">pip install "ragops-observatory[server,dashboard]"</code>
+        <button type="button" class="copy" data-copy="install" aria-label="Copy the install command">Copy</button>
+      </div>
+    </div>
+
+    <!-- the instrument: one request, inspected -->
+    <div class="scope" id="scope" aria-label="Example: one request inspected stage by stage">
+      <div class="scope-head">
+        <span class="q">&ldquo;How long do refunds take on annual plans?&rdquo;</span>
+        <span class="ver" id="scope-ver">help-centre assistant, v1</span>
+      </div>
+      <ol class="track" id="track">
+        <li data-stage="query"><span class="node"></span><b>Query</b><small>14 ms</small></li>
+        <li data-stage="retrieve"><span class="node"></span><b>Retrieve</b><small>top 20, 52 ms</small></li>
+        <li data-stage="rerank" data-fails><span class="node"></span><b>Rerank</b><small id="rerank-note">top 3, 31 ms</small></li>
+        <li data-stage="prompt"><span class="node"></span><b>Prompt</b><small>3 chunks</small></li>
+        <li data-stage="generate"><span class="node"></span><b>Generate</b><small>1.9 s</small></li>
+      </ol>
+      <div class="scope-out">
+        <p class="diag" id="diag" aria-live="polite">Following the request through each stage&hellip;</p>
+        <div class="stamp" id="stamp" aria-hidden="true"></div>
+      </div>
+      <p class="scope-foot">An illustration of what the dashboard shows for one request.</p>
+    </div>
+  </div>
+</section>
+
+<!-- PROOF STRIP -->
+<section class="strip" aria-label="Results">
+  <div class="wrap strip-row">
+    <div><strong>89.6%</strong><span>correct failing stage on 365 injected failures</span></div>
+    <div><strong>73.8%</strong><span>correct stage on SQuAD 2.0 questions</span></div>
+    <div><strong>20 / 20</strong><span>Ready verdict for the case-study assistant</span></div>
+    <div><strong>150</strong><span>automated tests on Python 3.11 to 3.13</span></div>
+  </div>
+</section>
+
+<!-- EXPLORER -->
+<section class="sec" id="explore"><div class="wrap">
+  <div class="head">
+    <h2>Six questions it answers, <em>on one screen each</em></h2>
+    <p>Tracing tools show what happened. RAGOps tells you which part broke, whether the next version is safer, and whether you can sign it off. Pick a question.</p>
+  </div>
+  <div class="explorer">
+    <div class="tabs" role="tablist" aria-label="Dashboard screens">
+      <button role="tab" aria-selected="true" data-img="evidence-graph.png"
+        data-cap="Evidence graph: every claim in the answer, linked to the source that supports or contradicts it.">
+        <span class="t">Which stage failed, and why?</span>
+        <span class="d">Each failing answer gets a stage, the evidence and a fix.</span></button>
+      <button role="tab" aria-selected="false" data-img="failure-intelligence.png"
+        data-cap="Failure intelligence: similar failures grouped into patterns, with counts and example questions.">
+        <span class="t">What keeps going wrong?</span>
+        <span class="d">Failures grouped by meaning, so you fix one cause at a time.</span></button>
+      <button role="tab" aria-selected="false" data-img="release-guardian.png"
+        data-cap="Release guardian: the candidate against the live version, quality gates, and an approval with a reason.">
+        <span class="t">Is the new version safe to ship?</span>
+        <span class="d">Significance-tested gates give Pass, Review or Block.</span></button>
+      <button role="tab" aria-selected="false" data-img="assurance.png"
+        data-cap="Assurance: a fingerprinted Ready / Not ready report, mapped to the EU AI Act, ISO/IEC 42001 and RBI FREE-AI.">
+        <span class="t">Can I sign it off?</span>
+        <span class="d">A Ready or Not ready report anyone can verify.</span></button>
+      <button role="tab" aria-selected="false" data-img="drift.png"
+        data-cap="Drift: new and changed question topics, including the ones no document covers yet.">
+        <span class="t">Have the questions changed?</span>
+        <span class="d">New topics in live traffic, and the gaps in your documents.</span></button>
+      <button role="tab" aria-selected="false" data-img="cost.png"
+        data-cap="Cost: tokens and estimated spend per model and environment, with judge costs shown separately.">
+        <span class="t">What is it costing?</span>
+        <span class="d">Spend per model and environment, from a versioned price table.</span></button>
+    </div>
+    <figure class="screen" role="tabpanel">
+      <div class="chrome" aria-hidden="true"><i></i><i></i><i></i><span>localhost:8000/ui</span></div>
+      <img id="screen-img" src="docs/images/evidence-graph.png" width="1440" height="900" alt="RAGOps dashboard: Which stage failed, and why?">
+      <figcaption id="screen-cap">Evidence graph: every claim in the answer, linked to the source that supports or contradicts it.</figcaption>
+    </figure>
+  </div>
+</div></section>
+
+<!-- LOOP -->
+<section class="sec sec-alt" id="loop"><div class="wrap">
+  <div class="head">
+    <h2>A score is not a fix. <em>This closes the loop.</em></h2>
+    <p>A wrong answer can come from the documents, the search, the ranking, the prompt or the model. Each step is a dashboard page, an API call and a CLI command.</p>
+  </div>
+  <ol class="loop">
+    <li><b>Trace</b><span>Every request and its steps, from the Python or TypeScript SDK, or OpenTelemetry.</span></li>
+    <li><b>Score</b><span>Correctness, faithfulness, relevance and ranking, with a free judge or any LLM.</span></li>
+    <li><b>Diagnose</b><span>The failing stage for each bad answer, the evidence and a fix.</span></li>
+    <li><b>Group</b><span>Similar failures become one pattern instead of a hundred traces.</span></li>
+    <li><b>Test</b><span>Questions from your own documents, with refusals and injection probes.</span></li>
+    <li><b>Gate</b><span>The candidate against the live version: Pass, Review or Block.</span></li>
+    <li><b>Certify</b><span>A Ready or Not ready report with a fingerprint anyone can check.</span></li>
+  </ol>
+</div></section>
+
+<!-- PROOF -->
+<section class="sec" id="proof"><div class="wrap">
+  <div class="head">
+    <h2>It said Not ready twice. <em>Both times the measurement was wrong.</em></h2>
+    <p>A real help-centre assistant on Sarvam 105B. The first test set came from the wrong folder, and two scoring rules marked reworded answers wrong; the diagnosis pointed at both. Then the release guardian blocked one version and passed the next.</p>
+  </div>
+  <div class="chart">
+<svg viewBox="0 0 1000 254" role="img" aria-labelledby="chart-t chart-d"><title id="chart-t">Case study pass rate, run by run</title><desc id="chart-d">Wrong test folder: 14.3% correct, Not ready; Right folder: 69.6% correct, Not ready; v2, top_k 5: 95.0% correct, baseline; v1, top_k 3: 90.0% correct, Block; v3, fixed: 100.0% correct, Ready; Live traffic: 95.3% correct, 279 questions</desc>
+<line class="grid" x1="0" x2="1000" y1="200.0" y2="200.0"/><text class="tick" x="0" y="194.0">0%</text>
+<line class="grid" x1="0" x2="1000" y1="117.0" y2="117.0"/><text class="tick" x="0" y="111.0">50%</text>
+<line class="grid" x1="0" x2="1000" y1="34.0" y2="34.0"/><text class="tick" x="0" y="28.0">100%</text>
+<rect class="col fail" x="63.0" y="176.3" width="76.7" height="23.7" rx="2"/>
+<text class="val" x="101.3" y="166.3">14.3%</text>
+<text class="lab" x="101.3" y="222">Wrong test folder</text>
+<text class="tag fail" x="101.3" y="242">Not ready</text>
+<rect class="col fail" x="229.7" y="84.5" width="76.7" height="115.5" rx="2"/>
+<text class="val" x="268.0" y="74.5">69.6%</text>
+<text class="lab" x="268.0" y="222">Right folder</text>
+<text class="tag fail" x="268.0" y="242">Not ready</text>
+<rect class="col base" x="396.3" y="42.3" width="76.7" height="157.7" rx="2"/>
+<text class="val" x="434.7" y="32.3">95%</text>
+<text class="lab" x="434.7" y="222">v2, top_k 5</text>
+<text class="tag base" x="434.7" y="242">baseline</text>
+<rect class="col fail" x="563.0" y="50.6" width="76.7" height="149.4" rx="2"/>
+<text class="val" x="601.3" y="40.6">90%</text>
+<text class="lab" x="601.3" y="222">v1, top_k 3</text>
+<text class="tag fail" x="601.3" y="242">Block</text>
+<rect class="col ok" x="729.7" y="34.0" width="76.7" height="166.0" rx="2"/>
+<text class="val" x="768.0" y="24.0">100%</text>
+<text class="lab" x="768.0" y="222">v3, fixed</text>
+<text class="tag ok" x="768.0" y="242">Ready</text>
+<rect class="col live" x="896.3" y="41.8" width="76.7" height="158.2" rx="2"/>
+<text class="val" x="934.7" y="31.8">95.3%</text>
+<text class="lab" x="934.7" y="222">Live traffic</text>
+<text class="tag live" x="934.7" y="242">279 questions</text>
+<line class="axis" x1="0" x2="1000" y1="200" y2="200"/></svg>
+  </div>
+  <div class="proof">
+    <div class="console" role="group" aria-label="Assurance report for v3">
+      <div class="cmd">$ ragops assure --dataset tests.jsonl</div>
+      <div class="row"><span class="ok">PASS</span><span>Answers correct and grounded</span><span>20 of 20</span></div>
+      <div class="row"><span class="ok">PASS</span><span>No made-up content</span><span>faithfulness 1.00</span></div>
+      <div class="row"><span class="ok">PASS</span><span>Declines what the documents do not cover</span><span>1 of 1</span></div>
+      <div class="row"><span class="ok">PASS</span><span>No crashes or empty answers</span><span>0 errors</span></div>
+      <div class="row"><span class="ok">PASS</span><span>Finds the right document</span><span>100%</span></div>
+      <div class="row"><span class="ok">PASS</span><span>Trustworthy judge</span><span>LLM, 0 fallbacks</span></div>
+      <div class="verdict">VERDICT: READY</div>
+      <div class="cmd dim">sha256 fingerprint, verifiable with ragops assure --verify</div>
+    </div>
+    <div class="facts">
+      <div class="fact"><span class="tag bad">Block</span><p><b>v2 to v1, smaller top_k.</b> Pass rate fell from 95% to 90% on 21 questions.</p></div>
+      <div class="fact"><span class="tag good">Pass</span><p><b>v1 to v3, fixed prompt.</b> 90% to 100%, nothing newly failing, slowest answers 6.0 s to 3.8 s.</p></div>
+      <div class="fact"><span class="tag dim">Live</span><p><b>279 real questions afterwards.</b> 95.3% correct; most of the rest asked about things no document covers, which the drift page listed as new topics.</p></div>
+      <a class="btn btn-ghost" href="docs/case-studies/my-rag/">Read the full case study</a>
+    </div>
+  </div>
+</div></section>
+
+<!-- FIT -->
+<section class="sec sec-alt" id="fit"><div class="wrap">
+  <div class="head">
+    <h2>Works with the tools <em>you already use</em></h2>
+    <p>RAGOps is not a replacement for a tracing platform or an evaluation library. It imports traces from Langfuse and Arize Phoenix, takes OpenTelemetry spans, and can use Ragas as its judge.</p>
+  </div>
+  <div class="table-wrap">
+  <table class="compare">
+    <thead><tr><th scope="col">The question you have</th><th scope="col">Tracing platforms</th><th scope="col">Evaluation libraries</th><th scope="col" class="us">RAGOps</th></tr></thead>
+    <tbody>
+      <tr><td>What happened in this request?</td><td class="y">Yes</td><td class="n">No</td><td class="us y">Yes</td></tr>
+      <tr><td>How good are the answers?</td><td class="s">Some</td><td class="y">Yes</td><td class="us y">Yes</td></tr>
+      <tr><td>Which stage failed, and what should change?</td><td class="n">No</td><td class="n">No</td><td class="us y">Yes</td></tr>
+      <tr><td>Is the new version safe to release?</td><td class="n">No</td><td class="n">No</td><td class="us y">Yes</td></tr>
+      <tr><td>Can I prove it to a client?</td><td class="n">No</td><td class="n">No</td><td class="us y">Yes</td></tr>
+    </tbody>
+  </table>
+  </div>
+  <p class="fine">Choose a larger platform such as Langfuse, LangSmith or Arize Phoenix if you need tracing for many kinds of LLM apps, or a hosted service. Tools change quickly; check their current documentation.</p>
+  <ul class="chips" aria-label="Integrations">
+    <li>LangChain</li><li>LlamaIndex</li><li>Haystack</li><li>LangGraph</li><li>OpenTelemetry</li><li>Langfuse import</li><li>Phoenix import</li>
+    <li>Ragas</li><li>Evidently</li><li>Presidio</li><li>OpenAI-compatible models</li><li>Ollama</li><li>PostgreSQL + pgvector</li>
+    <li>Redis</li><li>ClickHouse</li><li>Docker</li><li>Helm</li><li>GitHub Actions</li><li>Python SDK</li><li>TypeScript SDK</li>
+  </ul>
+</div></section>
+
+<!-- START -->
+<section class="sec" id="start"><div class="wrap">
+  <div class="head">
+    <h2>Run it yourself <em>in two minutes</em></h2>
+    <p>Python 3.11 or newer. The demo needs no API key: it loads 14 days of realistic traffic with failures to investigate and a release to judge.</p>
+  </div>
+  <div class="start">
+    <div class="term">
+      <div class="term-tabs" role="tablist" aria-label="Commands">
+        <button role="tab" aria-selected="true" data-term="t1">Try the demo</button>
+        <button role="tab" aria-selected="false" data-term="t2">Test your RAG</button>
+        <button role="tab" aria-selected="false" data-term="t3">Gate in CI</button>
+        <button type="button" class="copy" data-copy-term aria-label="Copy these commands">Copy</button>
+      </div>
+<pre id="t1">pip install "ragops-observatory[server,dashboard]"
+ragops demo
+ragops serve
+<span class="c"># open http://localhost:8000/ui   key: ragops-admin-dev-key</span></pre>
+<pre id="t2" hidden>ragops init                <span class="c"># ragops.yaml, my_rag.py, rag_tests.jsonl</span>
+ragops generate docs/ --n 30 --out tests.jsonl --security
+ragops test --json-out run.json
+ragops assure --from-json run.json</pre>
+<pre id="t3" hidden>ragops gate --pipeline my_rag.py:pipeline \
+  --baseline prod.yaml --candidate new.yaml \
+  --golden tests.jsonl --out gate.md
+<span class="c"># exit code 0 = pass, 1 = blocked</span></pre>
+    </div>
+    <ul class="notes">
+      <li><b>Your pipeline</b> is any Python function that takes a question and returns an answer and its sources. LangChain, LlamaIndex, Haystack and LangGraph examples are included.</li>
+      <li><b>The judge</b> is free and rule-based by default. Set <code>RAGOPS_JUDGE=openai</code> for any OpenAI-compatible model, or use Ollama.</li>
+      <li><b>For a team:</b> Docker Compose and a Helm chart, PostgreSQL with pgvector, Redis, ClickHouse, OIDC sign-in, roles and an audit log.</li>
+      <li><b>Windows works.</b> Only the optional ClickHouse engine is skipped.</li>
+    </ul>
+  </div>
+</div></section>
+
+<!-- LIMITS + CONTRIBUTE -->
+<section class="sec sec-alt" id="limits"><div class="wrap two">
+  <div>
+    <h2 class="h3">Before you trust a number</h2>
+    <ul class="list">
+      <li>The free judge is reproducible but misjudges reworded answers. Use an LLM judge for real scoring, and check it with <code>ragops judge check</code>.</li>
+      <li>LLM answers vary between runs. Run each version more than once, and use 50 or more questions before trusting small differences.</li>
+      <li>Generated questions are a first draft; read them before relying on them.</li>
+      <li>The assurance report is evidence, not a certificate of compliance.</li>
+    </ul>
+  </div>
+  <div>
+    <h2 class="h3">Help build it</h2>
+    <ul class="list">
+      <li>Found a wrong diagnosis? <a href="https://github.com/ArathiS1/ragops-observatory/issues">Open an issue</a> with the question, the answer and the stage you expected.</li>
+      <li>Next on the roadmap: larger benchmarks, multi-turn and agent traces, test generation in Indian languages, and a hosted version.</li>
+      <li>Using it in a report or paper? Cite it with <a href="https://github.com/ArathiS1/ragops-observatory/blob/main/CITATION.cff">CITATION.cff</a>.</li>
+    </ul>
+    <div class="cta">
+      <a class="btn btn-sun" href="https://github.com/ArathiS1/ragops-observatory">&#9733; Star on GitHub</a>
+      <a class="btn btn-ghost" href="https://github.com/ArathiS1/ragops-observatory/blob/main/CONTRIBUTING.md">Contributing guide</a>
+    </div>
+  </div>
+</div></section>
+</main>
+
+<footer><div class="wrap">
+  <a class="brand" href="./"><span class="lens" aria-hidden="true"></span>RAGOps Observatory</a>
+  <nav aria-label="Footer">
+    <a href="docs/">Docs</a>
+    <a href="docs/quickstart/">Quickstart</a>
+    <a href="docs/case-studies/my-rag/">Case study</a>
+    <a href="https://github.com/ArathiS1/ragops-observatory">Source</a>
+    <a href="https://github.com/ArathiS1/ragops-observatory/blob/main/CONTRIBUTING.md">Contributing</a>
+  </nav>
+  <span class="legal">MIT licence, &copy; 2026 Arathi S</span>
+</div></footer>
+<script src="site.js"></script>
+</body>
+</html>

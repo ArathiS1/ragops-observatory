@@ -30,8 +30,4 @@ private/
 .env.*
 !.env.example
 
-report-*.md
-result-*.json
-ragops-report.md
-ragops-doctor.md
-examples/doctor/fixed.yaml
+_site/
