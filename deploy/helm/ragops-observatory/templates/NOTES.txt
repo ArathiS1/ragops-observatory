@@ -1,0 +1,10 @@
+RAGOps Observatory {{ .Chart.AppVersion }} is installed.
+
+  kubectl port-forward svc/{{ .Release.Name }}-api 8000:8000
+  open http://localhost:8000/ui        (web UI)   http://localhost:8000/docs   (API)
+
+Queue: {{ if .Values.redisUrl }}Arq/Redis ({{ .Values.redisUrl }}){{ else }}Postgres (set redisUrl for instant dispatch){{ end }}
+Migrations: {{ if .Values.migrations.enabled }}run by the pre-install/pre-upgrade hook Job{{ else }}run by each API pod on start{{ end }}
+SSO: {{ if .Values.sso.enabled }}enabled ({{ .Values.sso.issuer }}){{ else }}disabled (API keys only){{ end }}
+
+Verify: helm test {{ .Release.Name }}

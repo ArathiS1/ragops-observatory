@@ -1,0 +1,46 @@
+name: "RAGOps release gate"
+description: "Replay a golden set through baseline and candidate RAG configs; block the PR on significant regressions."
+branding: { icon: shield, color: blue }
+inputs:
+  pipeline: { description: "Pipeline callable, module:function", required: true }
+  baseline: { description: "Baseline config file (YAML/JSON)", required: true }
+  candidate: { description: "Candidate config file (YAML/JSON)", required: true }
+  golden: { description: "Golden set file (alternative to fetching from a server)", required: false, default: "" }
+  server: { description: "RAGOps Observatory URL to fetch the golden set from", required: false, default: "" }
+  api-key: { description: "Project API key (viewer role is enough)", required: false, default: "" }
+  project: { description: "Project name", required: false, default: "" }
+  golden-set: { description: "Golden set name on the server", required: false, default: "production-failures" }
+  corpus: { description: "Corpus docs file or module:ATTR, enables stage-level diagnosis", required: false, default: "" }
+  max-drop: { description: "Smallest mean drop that can block", required: false, default: "0.02" }
+  comment: { description: "Post the report as a PR comment", required: false, default: "true" }
+  python-version: { required: false, default: "3.12" }
+outputs:
+  passed: { description: "true if the gate passed", value: "${{ steps.gate.outputs.passed }}" }
+runs:
+  using: composite
+  steps:
+    - uses: actions/setup-python@v5
+      with: { python-version: "${{ inputs.python-version }}" }
+    - shell: bash
+      run: pip install -q "ragops-observatory @ git+https://github.com/${{ github.action_repository || 'ArathiS1/ragops-observatory' }}@${{ github.action_ref || 'main' }}"
+    - id: gate
+      shell: bash
+      env:
+        RAGOPS_URL: ${{ inputs.server }}
+        RAGOPS_API_KEY: ${{ inputs.api-key }}
+        RAGOPS_PROJECT: ${{ inputs.project }}
+      run: |
+        args=(--pipeline "${{ inputs.pipeline }}" --baseline "${{ inputs.baseline }}" --candidate "${{ inputs.candidate }}"
+              --golden-set "${{ inputs.golden-set }}" --max-drop "${{ inputs.max-drop }}" --out ragops-gate.md)
+        [ -n "${{ inputs.golden }}" ] && args+=(--golden "${{ inputs.golden }}")
+        [ -n "${{ inputs.corpus }}" ] && args+=(--corpus "${{ inputs.corpus }}")
+        set +e; ragops gate "${args[@]}"; code=$?; set -e
+        cat ragops-gate.md >> "$GITHUB_STEP_SUMMARY"
+        echo "passed=$([ $code -eq 0 ] && echo true || echo false)" >> "$GITHUB_OUTPUT"
+        echo "code=$code" >> "$GITHUB_OUTPUT"
+    - if: inputs.comment == 'true' && github.event_name == 'pull_request'
+      shell: bash
+      env: { GH_TOKEN: "${{ github.token }}" }
+      run: gh pr comment "${{ github.event.pull_request.number }}" --body-file ragops-gate.md --edit-last || gh pr comment "${{ github.event.pull_request.number }}" --body-file ragops-gate.md
+    - shell: bash
+      run: exit ${{ steps.gate.outputs.code }}

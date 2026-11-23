@@ -1,0 +1,92 @@
+[build-system]
+requires = ["hatchling>=1.24"]
+build-backend = "hatchling.build"
+
+[project]
+name = "ragops-observatory"
+version = "0.10.0"
+description = "Prove your RAG works: find which stage fails and why, block worse releases, and issue Ready / Not ready assurance reports."
+readme = "README.md"
+license = "MIT"
+license-files = ["LICENSE"]
+requires-python = ">=3.11"
+authors = [{ name = "Arathi S" }]
+keywords = ["rag", "llm", "llmops", "observability", "evaluation", "llm-evaluation", "drift", "release-gate", "ai-assurance", "mlops"]
+classifiers = [
+  "Development Status :: 4 - Beta",
+  "Intended Audience :: Developers",
+  "Intended Audience :: Science/Research",
+  "Operating System :: OS Independent",
+  "Framework :: FastAPI",
+  "Programming Language :: Python :: 3",
+  "Programming Language :: Python :: 3.11",
+  "Programming Language :: Python :: 3.12",
+  "Programming Language :: Python :: 3.13",
+  "Topic :: Scientific/Engineering :: Artificial Intelligence",
+  "Topic :: Software Development :: Quality Assurance",
+  "Topic :: System :: Monitoring",
+]
+dependencies = [
+  "pydantic>=2.6",
+  "httpx>=0.27",
+  "numpy>=1.26",
+  "typer>=0.12",
+  "pyyaml>=6.0",
+]
+
+[project.optional-dependencies]
+server = [
+  "alembic>=1.13",
+  "pyjwt[crypto]>=2.8",
+  "reportlab>=4.0",
+  "opentelemetry-proto>=1.20",
+  "fastapi>=0.110",
+  "python-multipart>=0.0.9",
+  "uvicorn>=0.29",
+  "sqlalchemy>=2.0",
+  "psycopg[binary]>=3.1",
+  "scikit-learn>=1.4",
+  "scipy>=1.12",
+  "pandas>=2.1",
+]
+dashboard = ["streamlit>=1.33", "plotly>=5.20", "pandas>=2.1"]
+pgvector = ["pgvector>=0.3"]
+redis = ["arq>=0.26", "redis>=5.0"]
+evidently = ["evidently>=0.7"]
+presidio = ["presidio-analyzer>=2.2", "presidio-anonymizer>=2.2"]
+ragas = ["ragas>=0.4", "openai>=1.40"]
+sso = ["pyjwt[crypto]>=2.8"]
+langchain = ["langchain-core>=0.2"]
+all = ["ragops-observatory[server,dashboard,pgvector,redis,sso,evidently,presidio,ragas,langchain]"]
+dev = ["ragops-observatory[server,dashboard,pgvector,redis,sso]", "pytest>=8", "ruff>=0.4", "mkdocs-material>=9.5", "mkdocs<2",
+       "chdb>=2.0; sys_platform != \"win32\"", "aiosmtpd>=1.4"]
+
+[project.scripts]
+ragops = "ragops.cli:app"
+
+[project.urls]
+Homepage = "https://github.com/ArathiS1/ragops-observatory"
+Documentation = "https://arathis1.github.io/ragops-observatory/"
+Changelog = "https://github.com/ArathiS1/ragops-observatory/blob/main/CHANGELOG.md"
+Issues = "https://github.com/ArathiS1/ragops-observatory/issues"
+
+[tool.hatch.build]
+# the built dashboard is not in git (web/dist is built in CI) but must ship in both the sdist and the wheel
+artifacts = ["ragops/server/ui/**"]
+
+[tool.hatch.build.targets.sdist]
+exclude = ["web/node_modules", "sdk-ts/node_modules", "sdk-ts/dist", "web/dist", "site", ".github", "private"]
+
+[tool.hatch.build.targets.wheel]
+packages = ["ragops"]
+
+[tool.pytest.ini_options]
+testpaths = ["tests"]
+
+[tool.ruff]
+line-length = 120
+target-version = "py311"
+
+[tool.ruff.lint]
+select = ["E", "F", "W", "I"]
+ignore = ["E501", "E731"]

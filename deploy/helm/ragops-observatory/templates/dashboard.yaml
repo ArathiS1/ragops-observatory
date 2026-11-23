@@ -1,0 +1,31 @@
+{{- if .Values.dashboard.enabled }}
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: {{ .Release.Name }}-dashboard
+  labels: {{- include "ragops.labels" . | nindent 4 }}
+spec:
+  replicas: {{ .Values.dashboard.replicas }}
+  selector: { matchLabels: { app: {{ .Release.Name }}-dashboard } }
+  template:
+    metadata: { labels: { app: {{ .Release.Name }}-dashboard } }
+    spec:
+      securityContext: { runAsNonRoot: true, runAsUser: 10001 }
+      containers:
+        - name: dashboard
+          image: "{{ .Values.image.repository }}:{{ .Values.image.tag }}"
+          args: ["ragops", "dashboard", "--port", "8501"]
+          env:
+            - { name: RAGOPS_API_URL, value: "http://{{ .Release.Name }}-api:8000" }
+            - name: RAGOPS_API_KEY
+              valueFrom: { secretKeyRef: { name: {{ .Values.adminSecret }}, key: ADMIN_KEY } }
+          ports: [{ containerPort: 8501, name: http }]
+          resources: {{- toYaml .Values.dashboard.resources | nindent 12 }}
+---
+apiVersion: v1
+kind: Service
+metadata: { name: {{ .Release.Name }}-dashboard }
+spec:
+  selector: { app: {{ .Release.Name }}-dashboard }
+  ports: [{ port: 8501, targetPort: http, name: http }]
+{{- end }}

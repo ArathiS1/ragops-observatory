@@ -1,0 +1,5 @@
+# Proposed change: new reranker + smaller context window (this one regresses and gets blocked)
+chunk_words: 45
+top_k: 6
+rerank: bad
+context_k: 2

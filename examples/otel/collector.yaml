@@ -1,0 +1,16 @@
+# OpenTelemetry Collector: fan out the same traces to your existing tool and to RAGOps Observatory.
+receivers:
+  otlp:
+    protocols: { http: { endpoint: 0.0.0.0:4318 }, grpc: { endpoint: 0.0.0.0:4317 } }
+exporters:
+  otlphttp/phoenix:
+    endpoint: http://phoenix:6006
+  otlphttp/ragops:
+    traces_endpoint: http://ragops-api:8000/otlp/v1/traces
+    encoding: json
+    headers: { Authorization: "Bearer ${env:RAGOPS_INGEST_KEY}" }
+service:
+  pipelines:
+    traces:
+      receivers: [otlp]
+      exporters: [otlphttp/phoenix, otlphttp/ragops]

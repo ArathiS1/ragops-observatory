@@ -1,0 +1,482 @@
+{
+  "detection": {
+    "requests": 1200,
+    "actually_wrong": 640,
+    "wrong_flagged": 0.459,
+    "right_flagged": 0.075,
+    "precision": 0.875
+  },
+  "by_config": {
+    "v1-bm25-60w": {
+      "requests": 480,
+      "accuracy": 0.548,
+      "answerable_accuracy": 0.64,
+      "flagged": 0.196
+    },
+    "v2-25w-chunks": {
+      "requests": 360,
+      "accuracy": 0.381,
+      "answerable_accuracy": 0.496,
+      "flagged": 0.328
+    },
+    "v3-60w-rerank": {
+      "requests": 360,
+      "accuracy": 0.444,
+      "answerable_accuracy": 0.658,
+      "flagged": 0.344
+    }
+  },
+  "by_kind": {
+    "answerable": {
+      "requests": 921,
+      "accuracy": 0.603,
+      "flagged_labels": {
+        "generation_failure": 91,
+        "knowledge_gap": 35,
+        "stale_knowledge": 30,
+        "chunking_defect": 15,
+        "ranking_failure": 6,
+        "retrieval_miss": 3
+      }
+    },
+    "unanswerable": {
+      "requests": 133,
+      "accuracy": 0.03,
+      "flagged_labels": {
+        "generation_failure": 30,
+        "chunking_defect": 7,
+        "knowledge_gap": 6,
+        "stale_knowledge": 2,
+        "ranking_failure": 1,
+        "retrieval_miss": 1
+      }
+    },
+    "not_in_kb": {
+      "requests": 146,
+      "accuracy": 0.007,
+      "flagged_labels": {
+        "knowledge_gap": 77,
+        "generation_failure": 29,
+        "stale_knowledge": 2,
+        "chunking_defect": 1
+      }
+    }
+  },
+  "root_causes": [
+    {
+      "label": "generation_failure",
+      "count": 150,
+      "share": 0.4464,
+      "fix": "Good context, bad answer. Fix: prompt, model, or answer-grounding instructions."
+    },
+    {
+      "label": "knowledge_gap",
+      "count": 118,
+      "share": 0.3512,
+      "fix": "No document covers this question. Fix: write or ingest the missing content."
+    },
+    {
+      "label": "stale_knowledge",
+      "count": 34,
+      "share": 0.1012,
+      "fix": "Answer was built from an outdated document version. Fix: re-index changed documents."
+    },
+    {
+      "label": "chunking_defect",
+      "count": 23,
+      "share": 0.0685,
+      "fix": "The answer is split across chunk boundaries. Fix: larger chunks, overlap, or semantic chunking."
+    },
+    {
+      "label": "ranking_failure",
+      "count": 7,
+      "share": 0.0208,
+      "fix": "The right chunk was retrieved but dropped before generation. Fix: reranker, top-k, score cutoff."
+    },
+    {
+      "label": "retrieval_miss",
+      "count": 4,
+      "share": 0.0119,
+      "fix": "The right chunk exists but was not retrieved. Fix: embedding model, hybrid search, query rewriting."
+    }
+  ],
+  "quality_changes": [
+    {
+      "metric": "faithfulness",
+      "detected": false,
+      "change_date": null,
+      "before_mean": 1.0,
+      "after_mean": 1.0,
+      "p_value": 1.0,
+      "direction": null,
+      "cusum_alarm_date": null,
+      "summary": "faithfulness stable (best split 1.000 vs 1.000, p=1)"
+    },
+    {
+      "metric": "answer_relevance",
+      "detected": true,
+      "change_date": "2026-11-08",
+      "before_mean": 0.7418,
+      "after_mean": 0.6437,
+      "p_value": 0.0,
+      "direction": "degraded",
+      "cusum_alarm_date": "2026-11-09",
+      "summary": "answer_relevance degraded on 2026-11-08: 0.742 -> 0.644 (p=1.6e-09)",
+      "likely_causes": [
+        "config 'v2-25w-chunks' deployed 2026-11-07 15:12"
+      ]
+    },
+    {
+      "metric": "context_relevance",
+      "detected": true,
+      "change_date": "2026-11-08",
+      "before_mean": 0.8363,
+      "after_mean": 0.7086,
+      "p_value": 0.0,
+      "direction": "degraded",
+      "cusum_alarm_date": "2026-11-08",
+      "summary": "context_relevance degraded on 2026-11-08: 0.836 -> 0.709 (p=5.2e-08)",
+      "likely_causes": [
+        "config 'v2-25w-chunks' deployed 2026-11-07 15:12"
+      ]
+    }
+  ],
+  "query_drift": "New uncovered topic detected (domain AUC 0.55, MMD p=0.020). Emerging topics: 'many / form / civil' (40%); 'plague / high / pharmacy' (9%); 'steam / engine / another' (12%). 19% of current questions have no matching document in your corpus.",
+  "new_topics": [
+    {
+      "label": "many / form / civil",
+      "share": 0.404,
+      "novelty": 0.379,
+      "corpus_coverage": 0.456,
+      "covered": true,
+      "examples": [
+        "After the Oligocene period, under what period did the amazon rainforest begin to expand?",
+        "What is an underbid?",
+        "Compounding was not popular in the construction of what machines?"
+      ]
+    },
+    {
+      "label": "plague / high / pharmacy",
+      "share": 0.092,
+      "novelty": 0.514,
+      "corpus_coverage": 0.521,
+      "covered": true,
+      "examples": [
+        "What is the most important problem in the United States and elsewhere?",
+        "Which pharmacists are likely to seek additional education following pharmacy school?",
+        "What do contractors look to ensure during building construction?"
+      ]
+    },
+    {
+      "label": "steam / engine / another",
+      "share": 0.121,
+      "novelty": 0.301,
+      "corpus_coverage": 0.454,
+      "covered": true,
+      "examples": [
+        "What term refers to the concrete question to be solved?",
+        "What is another term for excessive compression?",
+        "Under what condition is an element irreducible?"
+      ]
+    },
+    {
+      "label": "rhine / flow / lake",
+      "share": 0.081,
+      "novelty": 0.378,
+      "corpus_coverage": 0.267,
+      "covered": false,
+      "examples": [
+        "Where is the Rhine? ",
+        "Where does the Rhine empty?",
+        "What was the source of the Rhine in the last Ice Age?"
+      ]
+    }
+  ],
+  "corpus_drift": {
+    "added": [
+      "1973_oil_crisis",
+      "Amazon_rainforest",
+      "Black_Death",
+      "Civil_disobedience",
+      "Computational_complexity_theory",
+      "Construction",
+      "Ctenophora",
+      "Economic_inequality",
+      "European_Union_law",
+      "Fresno,_California",
+      "Geology",
+      "Harvard_University",
+      "Huguenot",
+      "Jacksonville,_Florida",
+      "Normans",
+      "Oxygen",
+      "Packet_switching",
+      "Pharmacy",
+      "Private_school",
+      "Sky_(United_Kingdom)",
+      "Southern_California",
+      "Steam_engine",
+      "University_of_Chicago",
+      "Victoria_(Australia)",
+      "Yuan_dynasty"
+    ],
+    "changed": [
+      "Black_Death",
+      "Steam_engine"
+    ],
+    "deleted": [],
+    "outdated_trace_count": 131,
+    "outdated_trace_ids": [
+      "00f676fd33334b21814609cfb2eedf03",
+      "024a0d8ebfba4711973d07bcf8f8fd31",
+      "028dc83eea014f21abb6adc6f773780b",
+      "036579e87f6940449944f0dc881563c5",
+      "076ec9ac7703495abf569537fc40ac9c",
+      "083115217f054dd3b6f9a062b0f16c13",
+      "0c24adae169c40d6922ae5dfbcd108e0",
+      "0c34b8a720834ba9a1d8d47c136be5a5",
+      "0c3eaf9521ea4babb57d6a4d180f61bc",
+      "0d4b43d2d8174987813a3594cf7d2ebb",
+      "0da451da4bc04657b6a2d1f8058bafea",
+      "0f81564498d5433ea9d50ee6be3a59af",
+      "106eb53c60e44aa78b5abe9f04a3e12f",
+      "1104cbbf4b574d21be50b83fe72cd370",
+      "125b987cdc984ca596cc8b91421f7e88",
+      "1362cc0debb2417d8515a5aa9945ff71",
+      "172eebe6fcb64f97a56d3430c6fa0004",
+      "180494a77ff34d478416943f5d79d98f",
+      "1950ccd6f70349bab2587e64d188246e",
+      "1a8f28f3ad974be7a7c5ac0d447be571",
+      "1fbdd7cd50ae4b18b06b6c16aa7ce4f6",
+      "205d9324c51d4ee0a300e679d78d939b",
+      "211056406dbf47ddbd5d2c9086c201dd",
+      "21202d2a51a04480bba7566a9a6d0cff",
+      "222a0e3f0bd94d68bd70694708f57ca5",
+      "23627ab8afb143519db67da099326e6d",
+      "25209bf583ef4c4ea0daa5d7889a9e76",
+      "2690269653714447a65416d9889e53d0",
+      "2a89e809ee164084b640a232182cf9c4",
+      "31b75e3d6be44386a89fd70b17859fb2",
+      "33e01f23d6494420a992b5fec9bedc06",
+      "3422f31b869842eb92d13920bcdcd8ef",
+      "3bb27171429447569ed74ce5ed2c0954",
+      "3e960d8cdc5940f1955e8e2afee4393c",
+      "3ef628eef263480e86c86b8096f31a73",
+      "4ac610761a3a4789ad09d0ed70fdbb3b",
+      "4b650db1d61b4d9ca0c51d599e462cb7",
+      "4c3fbc7c6bca4de084972bfefe7aa8e6",
+      "4ced2258b57e4b63a1b891f0c70e0d15",
+      "558516de7ce2470194e5a2415f2df905",
+      "5650c0386fb24736a2a8895294fedc71",
+      "58733c9017c241a28d70b04a177d6e90",
+      "58ee36e2ee1b4667bc33552ce7f9eb37",
+      "5d4ebbee359841ff96389352ba40da7e",
+      "5d80c664d0e64b79b99fae1e6b2e28f1",
+      "662133c175074a00b32f672b67028579",
+      "691869603d71445f9d6e47e3771dfcea",
+      "691ae4183bcb4492887fd419b0dcdb81",
+      "6b26d418b8fe4d59a689604e13c92d24",
+      "6e1c075fe3f849a490e7858b02608cfb"
+    ],
+    "summary": "25 documents added, 2 changed, 0 deleted. 131 recent answers were built on content that has since changed."
+  },
+  "kb_gaps": [
+    {
+      "topic": "rhine / prime / name",
+      "query_count": 118,
+      "examples": [
+        "What is a reason for the movement to legalize importing medicines from other countries?",
+        "In 1962, who was responsible for the authorship of a paper published on real time-computations?",
+        "What is the unproven assumption generally ascribed to the value of complexity classes?",
+        "Where is Brazil ranked globally in soybean production?"
+      ],
+      "suggestion": "Write or ingest a document covering: rhine, prime, name, numbers"
+    }
+  ],
+  "analytics_by_config": [
+    {
+      "config_label": "v1-bm25-60w",
+      "traces": 480,
+      "failure_rate": 0.1958,
+      "faithfulness": 1.0,
+      "answer_relevance": 0.7457447916666666
+    },
+    {
+      "config_label": "v2-25w-chunks",
+      "traces": 360,
+      "failure_rate": 0.3278,
+      "faithfulness": 1.0,
+      "answer_relevance": 0.6498055555555555
+    },
+    {
+      "config_label": "v3-60w-rerank",
+      "traces": 360,
+      "failure_rate": 0.3444,
+      "faithfulness": 1.0,
+      "answer_relevance": 0.6467336111111112
+    }
+  ],
+  "alerts": [
+    "[RAGOps] wikihelp: SLO 'Answers address the question' breached"
+  ],
+  "golden_cases": 195,
+  "runs": {
+    "v2-25w-chunks": {
+      "cases": 80,
+      "failures": 27,
+      "failure_rate": 0.3375,
+      "pass_rate": 0.6625,
+      "metrics": {
+        "faithfulness": 1.0,
+        "answer_relevance": 0.5597,
+        "context_relevance": 0.6115,
+        "context_recall": 0.9625,
+        "abstention_quality": 0.9,
+        "citation_correctness": 0.9931
+      },
+      "hit_rate": 0.9625,
+      "stages": {
+        "generation_failure": 25,
+        "chunking_defect": 1,
+        "retrieval_miss": 1
+      },
+      "errors": 0,
+      "latency_p50_ms": 6.8,
+      "latency_p95_ms": 12.1
+    },
+    "v3-60w-rerank": {
+      "cases": 80,
+      "failures": 32,
+      "failure_rate": 0.4,
+      "pass_rate": 0.6,
+      "metrics": {
+        "faithfulness": 1.0,
+        "answer_relevance": 0.5668,
+        "context_relevance": 0.8,
+        "context_recall": 0.9875,
+        "abstention_quality": 0.9,
+        "citation_correctness": 0.9931
+      },
+      "hit_rate": 0.9875,
+      "stages": {
+        "generation_failure": 30,
+        "chunking_defect": 2
+      },
+      "errors": 0,
+      "latency_p50_ms": 5.3,
+      "latency_p95_ms": 7.9
+    }
+  },
+  "compare": {
+    "passed": true,
+    "n_cases": 80,
+    "metrics": [
+      {
+        "metric": "faithfulness",
+        "baseline": 1.0,
+        "candidate": 1.0,
+        "delta": 0.0,
+        "ci_low": 0.0,
+        "ci_high": 0.0,
+        "n": 80,
+        "status": "unchanged"
+      },
+      {
+        "metric": "answer_relevance",
+        "baseline": 0.5597,
+        "candidate": 0.5668,
+        "delta": 0.0071,
+        "ci_low": -0.026,
+        "ci_high": 0.0383,
+        "n": 80,
+        "status": "unchanged"
+      },
+      {
+        "metric": "context_relevance",
+        "baseline": 0.6115,
+        "candidate": 0.8,
+        "delta": 0.1885,
+        "ci_low": 0.0979,
+        "ci_high": 0.2833,
+        "n": 80,
+        "status": "improved"
+      },
+      {
+        "metric": "context_recall",
+        "baseline": 0.9625,
+        "candidate": 0.9875,
+        "delta": 0.025,
+        "ci_low": -0.025,
+        "ci_high": 0.075,
+        "n": 80,
+        "status": "unchanged"
+      },
+      {
+        "metric": "abstention_quality",
+        "baseline": 0.9,
+        "candidate": 0.9,
+        "delta": 0.0,
+        "ci_low": -0.0375,
+        "ci_high": 0.0375,
+        "n": 80,
+        "status": "unchanged"
+      },
+      {
+        "metric": "citation_correctness",
+        "baseline": 0.993,
+        "candidate": 0.993,
+        "delta": 0.0,
+        "ci_low": -0.0211,
+        "ci_high": 0.0211,
+        "n": 71,
+        "status": "unchanged"
+      }
+    ],
+    "stage_failures_baseline": {
+      "generation_failure": 25,
+      "chunking_defect": 1,
+      "retrieval_miss": 1
+    },
+    "stage_failures_candidate": {
+      "generation_failure": 30,
+      "chunking_defect": 2
+    },
+    "hit_rate_baseline": 0.9625,
+    "hit_rate_candidate": 0.9875,
+    "newly_failing": [
+      {
+        "query": "How many modern types of primality tests for general numbers n are there? ",
+        "label": "generation_failure"
+      },
+      {
+        "query": "How much did Saudi Arabia spend on spreading Wahhabism?",
+        "label": "chunking_defect"
+      },
+      {
+        "query": "What does critically tapered mean? ",
+        "label": "generation_failure"
+      },
+      {
+        "query": "What sort of engines utilized the Yarrow-Schlick-Tweedy balancing system?",
+        "label": "generation_failure"
+      },
+      {
+        "query": "Is a problem instance typically characterized as abstract or concrete?",
+        "label": "generation_failure"
+      },
+      {
+        "query": "Who led the North American Huguenot colonial expedition?",
+        "label": "generation_failure"
+      }
+    ],
+    "newly_fixed": [
+      {
+        "query": "What governing body appoints commissioners and the board of European Central Bank?",
+        "label": "generation_failure"
+      }
+    ],
+    "max_drop": 0.02,
+    "reasons": []
+  },
+  "generator": "extractive"
+}

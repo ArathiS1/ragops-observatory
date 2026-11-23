@@ -1,0 +1,5 @@
+# Proposed change: retrieve more candidates before reranking (safe, passes)
+chunk_words: 45
+top_k: 8
+rerank: good
+context_k: 3

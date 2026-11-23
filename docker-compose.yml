@@ -1,0 +1,88 @@
+# `docker compose up`                    -> API + UI at http://localhost:8000/ui, Postgres (pgvector), Redis, worker
+# `docker compose --profile demo up`     -> the same, plus a seeded demo project (admin key below)
+# `docker compose --profile clickhouse up` adds the ClickHouse analytics backend.
+# Schema migrations run automatically when the API starts (or run `docker compose run --rm api ragops db upgrade`).
+x-ragops-env: &ragops-env
+  RAGOPS_DATABASE_URL: postgresql+psycopg://ragops:ragops@postgres:5432/ragops
+  RAGOPS_ADMIN_KEY: ${RAGOPS_ADMIN_KEY:-ragops-admin-dev-key}
+  RAGOPS_JUDGE: ${RAGOPS_JUDGE:-heuristic}            # heuristic | openai | ollama | ragas
+  RAGOPS_JUDGE_MODEL: ${RAGOPS_JUDGE_MODEL:-gpt-4o-mini}
+  RAGOPS_JUDGE_BASE_URL: ${RAGOPS_JUDGE_BASE_URL:-}
+  RAGOPS_EMBEDDER: ${RAGOPS_EMBEDDER:-hashing}        # hashing | openai | sentence-transformers
+  RAGOPS_VECTOR_BACKEND: ${RAGOPS_VECTOR_BACKEND:-auto}
+  RAGOPS_CLICKHOUSE_URL: ${RAGOPS_CLICKHOUSE_URL:-}   # e.g. http://default:@clickhouse:8123/ragops with the profile
+  # endpoints the server may call when you test a registered RAG ("Test your RAG"); add your own hosts here
+  RAGOPS_PIPELINE_ALLOWED_HOSTS: ${RAGOPS_PIPELINE_ALLOWED_HOSTS:-localhost,127.0.0.1,api,host.docker.internal}
+  RAGOPS_PUBLIC_URL: ${RAGOPS_PUBLIC_URL:-http://localhost:8000}   # the URL your browser uses (SSO redirects, alert links)
+  RAGOPS_REDIS_URL: ${RAGOPS_REDIS_URL:-redis://redis:6379/0}      # instant job dispatch (Arq); empty = Postgres polling
+  RAGOPS_REDACTOR: ${RAGOPS_REDACTOR:-regex}                        # regex | presidio (build with EXTRAS incl. presidio)
+  OPENAI_API_KEY: ${OPENAI_API_KEY:-}
+  # Single sign-on (OIDC). Leave RAGOPS_OIDC_ISSUER empty to use API keys only.
+  RAGOPS_OIDC_ISSUER: ${RAGOPS_OIDC_ISSUER:-}
+  RAGOPS_OIDC_CLIENT_ID: ${RAGOPS_OIDC_CLIENT_ID:-}
+  RAGOPS_OIDC_CLIENT_SECRET: ${RAGOPS_OIDC_CLIENT_SECRET:-}
+  RAGOPS_OIDC_ROLE_MAP: ${RAGOPS_OIDC_ROLE_MAP:-}
+  RAGOPS_OIDC_DEFAULT_ROLE: ${RAGOPS_OIDC_DEFAULT_ROLE:-viewer}
+  RAGOPS_OIDC_ALLOWED_DOMAINS: ${RAGOPS_OIDC_ALLOWED_DOMAINS:-}
+  # E-mail alerts
+  RAGOPS_SMTP_HOST: ${RAGOPS_SMTP_HOST:-}
+  RAGOPS_SMTP_PORT: ${RAGOPS_SMTP_PORT:-587}
+  RAGOPS_SMTP_USER: ${RAGOPS_SMTP_USER:-}
+  RAGOPS_SMTP_PASSWORD: ${RAGOPS_SMTP_PASSWORD:-}
+  RAGOPS_SMTP_FROM: ${RAGOPS_SMTP_FROM:-ragops@localhost}
+
+services:
+  postgres:
+    image: pgvector/pgvector:pg16
+    environment: { POSTGRES_USER: ragops, POSTGRES_PASSWORD: ragops, POSTGRES_DB: ragops }
+    volumes: [pgdata:/var/lib/postgresql/data]
+    healthcheck: { test: ["CMD-SHELL", "pg_isready -U ragops"], interval: 5s, retries: 20 }
+
+  redis:
+    image: redis:7-alpine
+    command: ["redis-server", "--save", "", "--appendonly", "no"]   # a dispatcher only; Postgres keeps the jobs
+    healthcheck: { test: ["CMD", "redis-cli", "ping"], interval: 5s, retries: 20 }
+
+  api:
+    build:
+      context: .
+      args: { EXTRAS: "${RAGOPS_EXTRAS:-server,dashboard,pgvector,redis,sso}" }
+    image: ragops-observatory:latest
+    environment: *ragops-env
+    ports: ["8000:8000"]
+    extra_hosts: ["host.docker.internal:host-gateway"]   # lets the server test a RAG running on your machine
+    depends_on: { postgres: { condition: service_healthy }, redis: { condition: service_healthy } }
+
+  worker:
+    image: ragops-observatory:latest
+    command: ["ragops", "worker", "--backend", "auto"]   # Arq/Redis when RAGOPS_REDIS_URL is set
+    environment: { <<: *ragops-env, RAGOPS_ROLE: worker }
+    extra_hosts: ["host.docker.internal:host-gateway"]
+    depends_on: { api: { condition: service_started } }   # scale: docker compose up --scale worker=3
+
+  dashboard:   # lightweight Streamlit dashboard; the main UI is served by the API at /ui
+    image: ragops-observatory:latest
+    command: ["ragops", "dashboard", "--port", "8501"]
+    environment: { RAGOPS_ROLE: dashboard, RAGOPS_API_URL: "http://api:8000", RAGOPS_API_KEY: "${RAGOPS_ADMIN_KEY:-ragops-admin-dev-key}" }
+    ports: ["8501:8501"]
+    depends_on: [api]
+    profiles: ["streamlit"]
+
+  demo-seed:
+    image: ragops-observatory:latest
+    command: ["sh", "-c", "sleep 5 && (ragops demo || echo 'demo project already exists')"]
+    environment: { <<: *ragops-env, RAGOPS_ROLE: seed }
+    depends_on: { api: { condition: service_started } }
+    profiles: ["demo"]
+    restart: "no"
+
+  clickhouse:
+    image: clickhouse/clickhouse-server:24.8
+    environment: { CLICKHOUSE_DB: ragops, CLICKHOUSE_DEFAULT_ACCESS_MANAGEMENT: "1" }
+    ulimits: { nofile: { soft: 262144, hard: 262144 } }
+    volumes: [chdata:/var/lib/clickhouse]
+    profiles: ["clickhouse"]
+
+volumes:
+  pgdata:
+  chdata:

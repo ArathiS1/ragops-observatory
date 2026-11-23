@@ -1,0 +1,10 @@
+# pip install -r requirements.txt   (all four frameworks; install only the lines you need)
+fastembed>=0.4
+openai>=1.0
+llama-index-core>=0.12
+llama-index-llms-openai-like>=0.3
+langchain-core>=0.3
+langchain-openai>=0.2
+langchain-text-splitters>=0.3
+langgraph>=0.2
+haystack-ai>=2.8

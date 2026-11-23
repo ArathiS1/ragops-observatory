@@ -1,0 +1,125 @@
+name: CI
+on:
+  push: { branches: [main] }
+  pull_request:
+jobs:
+  python:
+    runs-on: ubuntu-latest
+    strategy: { matrix: { python: ["3.11", "3.12", "3.13"] } }
+    services:
+      postgres:
+        image: pgvector/pgvector:pg16
+        env: { POSTGRES_USER: ragops, POSTGRES_PASSWORD: ragops, POSTGRES_DB: ragops }
+        ports: ["5432:5432"]
+        options: --health-cmd pg_isready --health-interval 5s --health-retries 20
+      redis:
+        image: redis:7-alpine
+        ports: ["6379:6379"]
+        options: --health-cmd "redis-cli ping" --health-interval 5s --health-retries 20
+    env:
+      RAGOPS_TEST_PG_URL: postgresql+psycopg://ragops:ragops@localhost:5432/ragops
+      RAGOPS_TEST_REDIS_URL: redis://localhost:6379/0
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with: { python-version: "${{ matrix.python }}" }
+      - run: pip install -e ".[dev,evidently,presidio,ragas]" && python -m spacy download en_core_web_sm
+      - run: ruff check ragops tests examples
+      # real Postgres (migrations, pgvector), Redis/Arq, ClickHouse SQL (chdb), SMTP, OIDC mock IdP, Ragas/LLM judges
+      # against a deterministic OpenAI-compatible stub, Presidio, Evidently and the RAG doctor
+      - run: pytest -q
+      - name: judge check (heuristic judge must pass its own labelled cases)
+        run: ragops judge check
+  postgres-demo:
+    runs-on: ubuntu-latest
+    services:
+      postgres:
+        image: pgvector/pgvector:pg16
+        env: { POSTGRES_USER: ragops, POSTGRES_PASSWORD: ragops, POSTGRES_DB: ragops }
+        ports: ["5432:5432"]
+        options: --health-cmd pg_isready --health-interval 5s --health-retries 20
+    env: { RAGOPS_DATABASE_URL: "postgresql+psycopg://ragops:ragops@localhost:5432/ragops" }
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with: { python-version: "3.12" }
+      - run: pip install -e ".[dev]"
+      - run: ragops demo --days 7 --per-day 20 && ragops report nimbus-support --days 7
+  benchmarks:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with: { python-version: "3.12" }
+      - run: pip install -e ".[server]"
+      - run: |
+          ragops benchmark && ragops benchmark --dataset squad
+          cat benchmark/RESULTS.md benchmark/SQUAD_RESULTS.md >> "$GITHUB_STEP_SUMMARY"
+  typescript-sdk:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with: { node-version: "22" }
+      - uses: actions/setup-python@v5
+        with: { python-version: "3.12" }
+      - run: pip install -e ".[server]"
+      - working-directory: sdk-ts
+        run: npm install && npm test
+      - name: integration test against a live server
+        run: |
+          RAGOPS_DATABASE_URL=sqlite:///ts.db ragops serve --port 8000 --inline-jobs &
+          for i in $(seq 1 40); do curl -sf localhost:8000/health && break; sleep 0.5; done
+          export RAGOPS_API_KEY=$(curl -s -X POST localhost:8000/v1/projects -H "Authorization: Bearer ragops-admin-dev-key" \
+            -H "content-type: application/json" -d '{"name":"ts-ci"}' | python -c "import sys,json;print(json.load(sys.stdin)['admin_key'])")
+          cd sdk-ts && RAGOPS_URL=http://localhost:8000 RAGOPS_PROJECT=ts-ci npm run test:integration
+  web:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with: { node-version: "22" }
+      - working-directory: web
+        run: npm install && npm run build
+  doctor-example:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with: { python-version: "3.12" }
+      - run: pip install -e ".[server]"
+      - working-directory: examples/doctor
+        run: |
+          ragops doctor --write-config fixed.yaml || true          # exit 2: the example starts broken on purpose
+          ragops doctor --config fixed.yaml --no-trial || [ $? -eq 1 ]
+          cat ragops-doctor.md >> "$GITHUB_STEP_SUMMARY"
+  docs:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with: { python-version: "3.12" }
+      - run: pip install "mkdocs-material>=9.5" "mkdocs<2" && mkdocs build --strict
+  helm:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: azure/setup-helm@v4
+      - run: |
+          helm lint --strict deploy/helm/ragops-observatory
+          helm lint --strict deploy/helm/ragops-observatory --set redisUrl=redis://r:6379/0 --set sso.enabled=true \
+            --set sso.issuer=https://idp.example --set sso.clientId=x --set smtp.host=smtp --set ingress.enabled=true \
+            --set dashboard.enabled=true
+          pip install kubernetes-validate
+          helm template t deploy/helm/ragops-observatory --set redisUrl=redis://r:6379/0 --output-dir rendered
+          find rendered -name '*.yaml' | xargs kubernetes-validate -k 1.30.0 --strict
+  docker:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - run: docker build -t ragops-observatory:ci .
+      - name: smoke test the image
+        run: |
+          docker run -d --name api -p 8000:8000 ragops-observatory:ci
+          for i in $(seq 1 60); do curl -sf localhost:8000/health && break; sleep 1; done
+          curl -sf localhost:8000/ui/ > /dev/null

@@ -1,0 +1,35 @@
+name: Bug report
+description: Something in RAGOps Observatory does not work as documented
+labels: [bug]
+body:
+  - type: textarea
+    id: what
+    attributes:
+      label: What happened
+      description: What did you do, what did you expect, and what happened instead?
+    validations: { required: true }
+  - type: textarea
+    id: repro
+    attributes:
+      label: How to reproduce
+      description: Minimal steps, a trace payload or a failing `ragops test` dataset. Remove any personal data.
+      render: shell
+    validations: { required: true }
+  - type: dropdown
+    id: area
+    attributes:
+      label: Area
+      options: [Ingestion / SDK, Evaluation / judges, Root-cause diagnosis, Drift, Knowledge-base health, Golden sets / release gate, Test your RAG (pipelines and runs), SLOs / alerts, Web UI, Deployment, Other]
+    validations: { required: true }
+  - type: input
+    id: version
+    attributes: { label: Version, description: "Output of `ragops version`" }
+    validations: { required: true }
+  - type: dropdown
+    id: db
+    attributes:
+      label: Database
+      options: [PostgreSQL + pgvector, PostgreSQL (JSON vectors), SQLite, Not sure]
+  - type: textarea
+    id: logs
+    attributes: { label: Logs, render: shell }

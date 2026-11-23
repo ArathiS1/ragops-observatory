@@ -1,0 +1,12 @@
+cff-version: 1.2.0
+message: "If you use RAGOps Observatory in research or a report, please cite it."
+title: "RAGOps Observatory: stage-level diagnosis, release gates and assurance reports for RAG systems"
+authors:
+  - name: "Arathi S"
+type: software
+license: MIT
+version: "0.10.0"
+date-released: "2026-11-23"
+repository-code: "https://github.com/ArathiS1/ragops-observatory"
+url: "https://arathis1.github.io/ragops-observatory/"
+keywords: [retrieval-augmented generation, LLM evaluation, LLMOps, observability, AI assurance]

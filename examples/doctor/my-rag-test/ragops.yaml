@@ -1,0 +1,16 @@
+# RAGOps test configuration. Run: ragops test
+project: my-rag
+server: http://localhost:8000
+
+pipeline:
+  kind: python
+  callable: my_rag:answer
+
+config: {}
+dataset: rag_tests.jsonl
+corpus: docs/
+chunk_words: 120
+
+thresholds:
+  max_failure_rate: 0.25
+  min_metrics: {faithfulness: 0.7}

@@ -1,0 +1,9 @@
+apiVersion: v2
+name: ragops-observatory
+description: Production reliability for RAG pipelines — tracing, evaluation, root-cause diagnosis, drift and release gates
+type: application
+version: 0.6.0
+appVersion: "0.6.0"
+keywords: [rag, llm, observability, evaluation, drift, opentelemetry]
+home: https://github.com/arathis1/ragops-observatory
+sources: [https://github.com/arathis1/ragops-observatory]

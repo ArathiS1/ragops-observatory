@@ -1,0 +1,16 @@
+name: Feature request
+description: Suggest a capability RAGOps Observatory should have
+labels: [enhancement]
+body:
+  - type: textarea
+    id: problem
+    attributes:
+      label: The problem
+      description: What are you trying to find out or prevent in your RAG system? Describe the situation, not the solution.
+    validations: { required: true }
+  - type: textarea
+    id: proposal
+    attributes: { label: What would help }
+  - type: textarea
+    id: alternatives
+    attributes: { label: What you use today instead }

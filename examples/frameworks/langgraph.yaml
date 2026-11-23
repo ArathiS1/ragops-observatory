@@ -1,0 +1,16 @@
+# ragops test -f langgraph.yaml   (run from examples/frameworks)
+project: frameworks-langgraph
+server: http://localhost:8000
+pipeline:
+  kind: python
+  callable: langgraph_rag.py:answer
+config:              # the knobs langgraph_rag.py reads; `ragops doctor -f langgraph.yaml` tunes them
+  chunk_size: 1000
+  chunk_overlap: 100
+  top_k: 3
+  max_tokens: 8192
+dataset: ../doctor/tests.jsonl
+corpus: ../doctor/docs/
+chunk_words: 40
+thresholds:
+  max_failure_rate: 0.25

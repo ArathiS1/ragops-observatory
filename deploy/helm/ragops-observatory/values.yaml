@@ -1,0 +1,72 @@
+image:
+  repository: ghcr.io/arathis1/ragops-observatory
+  tag: "0.6.0"
+  pullPolicy: IfNotPresent
+imagePullSecrets: []
+
+# External PostgreSQL (RDS, Cloud SQL, ...) with the pgvector extension recommended.
+# The secret must contain key DATABASE_URL, e.g. postgresql+psycopg://user:pass@host:5432/ragops
+database:
+  existingSecret: ragops-db
+# Secret with key ADMIN_KEY. Optional keys: OPENAI_API_KEY, OIDC_CLIENT_SECRET, SMTP_PASSWORD
+adminSecret: ragops-admin
+
+# Schema migrations run once per install/upgrade as a Helm hook Job (`ragops db upgrade`),
+# so API replicas never race each other on startup.
+migrations:
+  enabled: true
+
+# Job queue. Empty = durable Postgres queue polled by the workers.
+# Set to a Redis URL to dispatch jobs instantly through Arq (Postgres stays the source of truth).
+redisUrl: ""               # e.g. redis://redis-master:6379/0
+publicUrl: ""              # external URL, used for SSO redirects and links in alerts, e.g. https://ragops.acme.dev
+
+judge: heuristic           # heuristic | openai | ollama | ragas
+judgeModel: gpt-4o-mini
+judgeBaseUrl: ""           # OpenAI-compatible endpoint (vLLM, Azure, Ollama /v1 ...)
+embedder: hashing          # hashing | sentence-transformers (image must include it)
+vectorBackend: auto        # auto | pgvector | json
+redactor: regex            # regex | presidio (build the image with EXTRAS including presidio)
+clickhouseUrl: ""          # optional analytics backend, e.g. http://default:@clickhouse:8123/ragops
+pipelineAllowedHosts: ""   # hosts the server may call when testing registered RAG endpoints
+
+# Single sign-on (OIDC: Okta, Entra ID, Google Workspace, Keycloak, Auth0 ...)
+sso:
+  enabled: false
+  issuer: ""               # https://login.microsoftonline.com/<tenant>/v2.0
+  clientId: ""
+  org: default             # organisation that SSO users join
+  roleClaim: groups
+  roleMap: ""              # e.g. "ragops-admins=admin,ragops-editors=editor"
+  defaultRole: viewer      # role when no group matches; "none" denies access
+  allowedDomains: ""       # e.g. "acme.com"
+  providerName: SSO
+
+# Alert delivery by e-mail (Slack, Teams, PagerDuty and webhooks are configured per project in the UI/API)
+smtp:
+  host: ""
+  port: 587
+  user: ""
+  security: starttls       # starttls | ssl | none
+  from: ragops@example.com
+
+api:
+  replicas: 2
+  resources: { requests: { cpu: 250m, memory: 512Mi }, limits: { memory: 1Gi } }
+worker:
+  replicas: 2
+  resources: { requests: { cpu: 500m, memory: 768Mi }, limits: { memory: 1536Mi } }
+dashboard:                 # optional Streamlit dashboard (the main web UI is served by the API at /ui)
+  enabled: false
+  replicas: 1
+  resources: { requests: { cpu: 100m, memory: 256Mi }, limits: { memory: 512Mi } }
+
+podSecurityContext: { runAsNonRoot: true, runAsUser: 10001, fsGroup: 10001 }
+containerSecurityContext: { allowPrivilegeEscalation: false, capabilities: { drop: [ALL] } }
+
+ingress:
+  enabled: false
+  className: nginx
+  host: ragops.example.com
+  annotations: {}
+  tls: []

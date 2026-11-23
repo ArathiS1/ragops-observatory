@@ -1,0 +1,342 @@
+{
+ "name": "nimbus-golden",
+ "version": 1,
+ "cases": [
+  {
+   "query": "What is the refund policy for annual plans?",
+   "expected_doc_ids": [
+    "billing-refunds"
+   ]
+  },
+  {
+   "query": "Can I get a refund on a monthly plan?",
+   "expected_doc_ids": [
+    "billing-refunds"
+   ]
+  },
+  {
+   "query": "How long does a refund take to arrive?",
+   "expected_doc_ids": [
+    "billing-refunds"
+   ]
+  },
+  {
+   "query": "Is there a processing fee on annual refunds after 30 days?",
+   "expected_doc_ids": [
+    "billing-refunds"
+   ]
+  },
+  {
+   "query": "How much does the Pro plan cost per user?",
+   "expected_doc_ids": [
+    "pricing-plans"
+   ]
+  },
+  {
+   "query": "How much storage does the Starter plan include?",
+   "expected_doc_ids": [
+    "pricing-plans"
+   ]
+  },
+  {
+   "query": "What does the Enterprise plan add?",
+   "expected_doc_ids": [
+    "pricing-plans"
+   ]
+  },
+  {
+   "query": "How long is version history kept on the Pro plan?",
+   "expected_doc_ids": [
+    "pricing-plans"
+   ]
+  },
+  {
+   "query": "How do I connect Okta for SAML single sign-on on Enterprise?",
+   "expected_doc_ids": [
+    "sso-setup"
+   ]
+  },
+  {
+   "query": "Which identity providers does Nimbus single sign-on support?",
+   "expected_doc_ids": [
+    "sso-setup"
+   ]
+  },
+  {
+   "query": "How do I connect Azure AD to Nimbus?",
+   "expected_doc_ids": [
+    "sso-setup"
+   ]
+  },
+  {
+   "query": "What is the API rate limit on the Pro plan?",
+   "expected_doc_ids": [
+    "api-rate-limits"
+   ]
+  },
+  {
+   "query": "What happens when I exceed the API rate limit?",
+   "expected_doc_ids": [
+    "api-rate-limits"
+   ]
+  },
+  {
+   "query": "How many API requests per minute are allowed on Enterprise?",
+   "expected_doc_ids": [
+    "api-rate-limits"
+   ]
+  },
+  {
+   "query": "How long do deleted files stay in the trash?",
+   "expected_doc_ids": [
+    "data-retention"
+   ]
+  },
+  {
+   "query": "How long are audit logs retained?",
+   "expected_doc_ids": [
+    "data-retention"
+   ]
+  },
+  {
+   "query": "When is data deleted after an account is closed?",
+   "expected_doc_ids": [
+    "data-retention"
+   ]
+  },
+  {
+   "query": "How often does Nimbus back up customer data?",
+   "expected_doc_ids": [
+    "backups"
+   ]
+  },
+  {
+   "query": "What is the recovery time objective?",
+   "expected_doc_ids": [
+    "backups"
+   ]
+  },
+  {
+   "query": "Can I restore a backup myself?",
+   "expected_doc_ids": [
+    "backups"
+   ]
+  },
+  {
+   "query": "Which regions can host a Nimbus workspace?",
+   "expected_doc_ids": [
+    "regions"
+   ]
+  },
+  {
+   "query": "Can I move my workspace to another region?",
+   "expected_doc_ids": [
+    "regions"
+   ]
+  },
+  {
+   "query": "Does my data leave the selected region?",
+   "expected_doc_ids": [
+    "regions"
+   ]
+  },
+  {
+   "query": "How do I reset my password?",
+   "expected_doc_ids": [
+    "password-reset"
+   ]
+  },
+  {
+   "query": "How long is the password reset link valid?",
+   "expected_doc_ids": [
+    "password-reset"
+   ]
+  },
+  {
+   "query": "Can an admin force a password reset for a member?",
+   "expected_doc_ids": [
+    "password-reset"
+   ]
+  },
+  {
+   "query": "Does two-factor authentication support SMS codes?",
+   "expected_doc_ids": [
+    "two-factor"
+   ]
+  },
+  {
+   "query": "How do I recover if I lose my two-factor device?",
+   "expected_doc_ids": [
+    "two-factor"
+   ]
+  },
+  {
+   "query": "Can admins require two-factor authentication?",
+   "expected_doc_ids": [
+    "two-factor"
+   ]
+  },
+  {
+   "query": "Where can I find my invoices?",
+   "expected_doc_ids": [
+    "invoices"
+   ]
+  },
+  {
+   "query": "Which payment methods does Nimbus accept?",
+   "expected_doc_ids": [
+    "invoices"
+   ]
+  },
+  {
+   "query": "How do I add a VAT number to my invoices?",
+   "expected_doc_ids": [
+    "invoices"
+   ]
+  },
+  {
+   "query": "What uptime does the Enterprise SLA guarantee?",
+   "expected_doc_ids": [
+    "uptime-sla"
+   ]
+  },
+  {
+   "query": "What service credit do I get if uptime falls below 99%?",
+   "expected_doc_ids": [
+    "uptime-sla"
+   ]
+  },
+  {
+   "query": "How long do I have to request a service credit?",
+   "expected_doc_ids": [
+    "uptime-sla"
+   ]
+  },
+  {
+   "query": "What is the support response time on the Pro plan?",
+   "expected_doc_ids": [
+    "support-hours"
+   ]
+  },
+  {
+   "query": "Is 24/7 support available?",
+   "expected_doc_ids": [
+    "support-hours"
+   ]
+  },
+  {
+   "query": "What are Nimbus support business hours?",
+   "expected_doc_ids": [
+    "support-hours"
+   ]
+  },
+  {
+   "query": "How do I export all my workspace data?",
+   "expected_doc_ids": [
+    "data-export"
+   ]
+  },
+  {
+   "query": "How long is the export download link valid?",
+   "expected_doc_ids": [
+    "data-export"
+   ]
+  },
+  {
+   "query": "What happens to exports larger than 50 GB?",
+   "expected_doc_ids": [
+    "data-export"
+   ]
+  },
+  {
+   "query": "What roles does Nimbus have?",
+   "expected_doc_ids": [
+    "team-roles"
+   ]
+  },
+  {
+   "query": "Who can delete the workspace?",
+   "expected_doc_ids": [
+    "team-roles"
+   ]
+  },
+  {
+   "query": "Do guest viewers use a paid seat?",
+   "expected_doc_ids": [
+    "team-roles"
+   ]
+  },
+  {
+   "query": "How are webhook deliveries signed?",
+   "expected_doc_ids": [
+    "webhooks"
+   ]
+  },
+  {
+   "query": "How many times are failed webhook deliveries retried?",
+   "expected_doc_ids": [
+    "webhooks"
+   ]
+  },
+  {
+   "query": "Which events trigger a webhook?",
+   "expected_doc_ids": [
+    "webhooks"
+   ]
+  },
+  {
+   "query": "What is the maximum file upload size in the browser?",
+   "expected_doc_ids": [
+    "storage-limits"
+   ]
+  },
+  {
+   "query": "What happens when storage is full?",
+   "expected_doc_ids": [
+    "storage-limits"
+   ]
+  },
+  {
+   "query": "Can I buy extra storage?",
+   "expected_doc_ids": [
+    "storage-limits"
+   ]
+  },
+  {
+   "query": "Is a data processing agreement available?",
+   "expected_doc_ids": [
+    "gdpr"
+   ]
+  },
+  {
+   "query": "How are customers notified about new subprocessors?",
+   "expected_doc_ids": [
+    "gdpr"
+   ]
+  },
+  {
+   "query": "How quickly are data subject requests answered?",
+   "expected_doc_ids": [
+    "gdpr"
+   ]
+  },
+  {
+   "query": "Where are service incidents posted?",
+   "expected_doc_ids": [
+    "incident-process"
+   ]
+  },
+  {
+   "query": "When is a post-incident review published?",
+   "expected_doc_ids": [
+    "incident-process"
+   ]
+  },
+  {
+   "query": "How often do Enterprise customers get incident updates?",
+   "expected_doc_ids": [
+    "incident-process"
+   ]
+  }
+ ]
+}

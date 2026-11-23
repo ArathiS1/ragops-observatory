@@ -1,0 +1,14 @@
+# RAG doctor walkthrough:  cd examples/doctor && ragops doctor
+project: acme-help
+pipeline:
+  kind: python
+  callable: acme_rag.py:answer
+config:            # the knobs acme_rag.py reads; the doctor tests changes to these
+  chunk_size: 12
+  top_k: 1
+  abstain_when_unsure: false
+dataset: tests.jsonl
+corpus: docs/
+chunk_words: 40
+thresholds:
+  max_failure_rate: 0.2

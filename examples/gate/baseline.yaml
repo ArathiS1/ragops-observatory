@@ -1,0 +1,5 @@
+# Config currently in production
+chunk_words: 45
+top_k: 6
+rerank: good
+context_k: 3

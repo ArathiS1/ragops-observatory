@@ -1,0 +1,25 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: {{ .Release.Name }}-worker
+  labels: {{- include "ragops.labels" . | nindent 4 }}
+spec:
+  replicas: {{ .Values.worker.replicas }}
+  selector: { matchLabels: { app: {{ .Release.Name }}-worker } }
+  template:
+    metadata:
+      labels: { app: {{ .Release.Name }}-worker }
+      annotations: { checksum/values: {{ toJson .Values | sha256sum | trunc 16 | quote }} }
+    spec:
+      {{- include "ragops.podSpecCommon" . | nindent 6 }}
+      containers:
+        - name: worker
+          image: "{{ .Values.image.repository }}:{{ .Values.image.tag }}"
+          imagePullPolicy: {{ .Values.image.pullPolicy }}
+          # auto = Arq/Redis when redisUrl is set, otherwise the Postgres queue
+          args: ["ragops", "worker", "--backend", "auto"]
+          env:
+            - { name: RAGOPS_ROLE, value: worker }
+            {{- include "ragops.env" . | nindent 12 }}
+          securityContext: {{- toYaml .Values.containerSecurityContext | nindent 12 }}
+          resources: {{- toYaml .Values.worker.resources | nindent 12 }}

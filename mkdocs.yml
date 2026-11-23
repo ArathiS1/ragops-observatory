@@ -1,0 +1,60 @@
+site_name: RAGOps Observatory
+site_description: Prove your RAG works. Stage diagnosis, evidence graph, release guardian and assurance reports for RAG systems.
+site_author: Arathi S
+site_url: https://arathis1.github.io/ragops-observatory/
+repo_url: https://github.com/ArathiS1/ragops-observatory
+repo_name: ArathiS1/ragops-observatory
+edit_uri: edit/main/docs/
+copyright: MIT licence · © 2026 Arathi S
+theme:
+  name: material
+  palette:
+    - scheme: slate
+      primary: indigo
+      accent: indigo
+      toggle: { icon: material/weather-sunny, name: Light theme }
+    - scheme: default
+      primary: indigo
+      accent: indigo
+      toggle: { icon: material/weather-night, name: Dark theme }
+  features: [navigation.sections, navigation.top, navigation.footer, content.code.copy, search.highlight, search.suggest]
+  icon: { repo: fontawesome/brands/github }
+extra:
+  social:
+    - icon: fontawesome/brands/github
+      link: https://github.com/ArathiS1/ragops-observatory
+    - icon: fontawesome/brands/python
+      link: https://pypi.org/project/ragops-observatory/
+markdown_extensions:
+  - admonition
+  - tables
+  - attr_list
+  - md_in_html
+  - toc: { permalink: true }
+  - pymdownx.superfences:
+      custom_fences:
+        - { name: mermaid, class: mermaid, format: !!python/name:pymdownx.superfences.fence_code_format }
+  - pymdownx.tabbed: { alternate_style: true }
+  - pymdownx.emoji
+nav:
+  - Home: index.md
+  - Get started:
+      - Quickstart: quickstart.md
+      - Test your RAG: test-your-rag.md
+      - Dashboard tour: dashboard.md
+  - Prove and improve:
+      - Assurance (generate, assure, guard): assurance.md
+      - RAG doctor: doctor.md
+      - Release gate: gate.md
+      - Reliability analytics: reliability.md
+  - Results:
+      - "Case study: Not ready → Ready": case-studies/my-rag.md
+      - Field report: field-report.md
+      - Benchmarks: benchmarks.md
+  - Reference:
+      - Concepts: concepts.md
+      - Integrations: integrations.md
+      - Feature map: feature-map.md
+      - REST API: api.md
+      - Deployment and security: deployment.md
+      - Releasing: releasing.md

@@ -1,0 +1,94 @@
+{
+  "cases": 365,
+  "injected_failures": 309,
+  "attribution_accuracy": 0.896,
+  "macro_recall": 0.899,
+  "false_alarm_rate": 0.018,
+  "per_label": {
+    "knowledge_gap": {
+      "n": 8,
+      "recall": 0.875,
+      "precision": 0.636
+    },
+    "stale_knowledge": {
+      "n": 56,
+      "recall": 0.964,
+      "precision": 1.0
+    },
+    "chunking_defect": {
+      "n": 21,
+      "recall": 0.952,
+      "precision": 0.625
+    },
+    "retrieval_miss": {
+      "n": 56,
+      "recall": 0.857,
+      "precision": 0.96
+    },
+    "ranking_failure": {
+      "n": 56,
+      "recall": 0.839,
+      "precision": 0.94
+    },
+    "context_overload": {
+      "n": 56,
+      "recall": 0.893,
+      "precision": 1.0
+    },
+    "generation_failure": {
+      "n": 56,
+      "recall": 0.911,
+      "precision": 0.823
+    },
+    "ok": {
+      "n": 56,
+      "recall": 0.982,
+      "precision": 0.982
+    }
+  },
+  "confusion": {
+    "knowledge_gap": {
+      "knowledge_gap": 7,
+      "generation_failure": 1
+    },
+    "stale_knowledge": {
+      "stale_knowledge": 54,
+      "ranking_failure": 1,
+      "ok": 1
+    },
+    "chunking_defect": {
+      "chunking_defect": 20,
+      "generation_failure": 1
+    },
+    "retrieval_miss": {
+      "retrieval_miss": 48,
+      "chunking_defect": 3,
+      "generation_failure": 4,
+      "knowledge_gap": 1
+    },
+    "ranking_failure": {
+      "ranking_failure": 47,
+      "chunking_defect": 3,
+      "generation_failure": 4,
+      "retrieval_miss": 1,
+      "knowledge_gap": 1
+    },
+    "context_overload": {
+      "context_overload": 50,
+      "chunking_defect": 3,
+      "generation_failure": 1,
+      "retrieval_miss": 1,
+      "knowledge_gap": 1
+    },
+    "generation_failure": {
+      "generation_failure": 51,
+      "chunking_defect": 3,
+      "ranking_failure": 1,
+      "knowledge_gap": 1
+    },
+    "ok": {
+      "ok": 55,
+      "ranking_failure": 1
+    }
+  }
+}

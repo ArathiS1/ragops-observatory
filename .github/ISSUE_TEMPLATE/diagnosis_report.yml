@@ -1,0 +1,25 @@
+name: Wrong diagnosis
+description: RAGOps named the wrong pipeline stage (or missed / invented a failure)
+labels: [diagnosis]
+body:
+  - type: markdown
+    attributes:
+      value: Wrong diagnoses are the most valuable reports we get. Each one becomes a benchmark case so the fix is measured.
+  - type: input
+    id: got
+    attributes: { label: RAGOps said, placeholder: "ranking_failure (confidence 0.85)" }
+    validations: { required: true }
+  - type: input
+    id: expected
+    attributes: { label: The real cause was, placeholder: "retrieval_miss: the right document was not in the index" }
+    validations: { required: true }
+  - type: textarea
+    id: evidence
+    attributes:
+      label: Trace and evidence
+      description: The trace JSON (`GET /v1/projects/{p}/traces/{id}`) with personal data removed, including the diagnosis evidence.
+      render: json
+    validations: { required: true }
+  - type: dropdown
+    id: judge
+    attributes: { label: Judge, options: [heuristic, openai, ollama / vLLM, ragas] }

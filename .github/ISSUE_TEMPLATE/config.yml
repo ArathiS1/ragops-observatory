@@ -1,0 +1,8 @@
+blank_issues_enabled: false
+contact_links:
+  - name: Security vulnerability
+    url: https://github.com/ArathiS1/ragops-observatory/security/advisories/new
+    about: Report privately; see SECURITY.md.
+  - name: Questions and ideas
+    url: https://github.com/ArathiS1/ragops-observatory/discussions
+    about: Ask how to instrument your pipeline or share what RAGOps found for you.

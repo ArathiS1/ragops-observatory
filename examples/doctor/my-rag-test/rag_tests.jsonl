@@ -1,0 +1,19 @@
+{"query": "How do I reset my password?", "expected_answer": "Open Settings, then Security, and click Reset password.", "expected_doc_ids": ["security.md"]}
+{"query": "What is the refund window for annual plans?", "expected_answer": "Refunds are available within 30 days of a charge for annual plans.", "expected_doc_ids": ["billing.md"]}
+{"query": "How often are backups taken?", "expected_answer": "Backups are taken every 6 hours and kept for 35 days.", "expected_doc_ids": ["data.md"]}
+{"query": "What is the API rate limit on the Team plan?", "expected_answer": "500 requests per second on the Team plan.", "expected_doc_ids": ["limits.md"]}
+{"query": "Do you have an office in Tokyo?", "expected_answer": "I don't know"}
+{"query": "How often are backups taken?", "expected_answer": "Backups are taken every 6 hours.", "expected_doc_ids": ["data.md"]}
+{"query": "Is there a mobile app?", "expected_answer": "There is no mobile app yet; the web app works in phone browsers.", "expected_doc_ids": ["mobile.md"]}
+{"query": "How much storage does the Free plan include?", "expected_answer": "1 GB of storage.", "expected_doc_ids": ["limits.md"]}
+{"query": "How many API requests per month does the Team plan include?", "expected_answer": "5 million API requests per month.", "expected_doc_ids": ["limits.md"]}
+{"query": "What is the API rate limit on the Free plan?", "expected_answer": "20 requests per second.", "expected_doc_ids": ["limits.md"]}
+{"query": "How do I turn on two-factor authentication?", "expected_answer": "Under Settings, then Security, then Two-factor.", "expected_doc_ids": ["security.md"]}
+{"query": "Which plan includes single sign-on?", "expected_answer": "The Enterprise plan, with SAML or OIDC.", "expected_doc_ids": ["security.md"]}
+{"query": "Which payment methods do you accept?", "expected_answer": "Visa, Mastercard, American Express and SEPA direct debit.", "expected_doc_ids": ["billing.md"]}
+{"query": "Are monthly plans refundable?", "expected_answer": "No, monthly plans are not refundable.", "expected_doc_ids": ["billing.md"]}
+{"query": "Where can I download my invoices?", "expected_answer": "Settings, then Billing, then Invoices.", "expected_doc_ids": ["billing.md"]}
+{"query": "Which regions can store my data?", "expected_answer": "Frankfurt, Dublin, Virginia or Singapore.", "expected_doc_ids": ["data.md"]}
+{"query": "Can I change my workspace region later?", "expected_answer": "No, the region cannot be changed later; contact support to migrate.", "expected_doc_ids": ["data.md"]}
+{"query": "How fast does support respond to Team plan customers?", "expected_answer": "Within 8 business hours.", "expected_doc_ids": ["support.md"]}
+{"query": "Do you offer a student discount?", "expected_answer": "I don't know"}

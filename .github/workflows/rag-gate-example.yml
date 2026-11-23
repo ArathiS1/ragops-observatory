@@ -1,0 +1,18 @@
+# Example: gate RAG config changes in this repo's own demo pipeline (copy this into your project).
+name: RAG release gate (example)
+on:
+  pull_request:
+    paths: ["examples/gate/**"]
+jobs:
+  gate:
+    runs-on: ubuntu-latest
+    permissions: { pull-requests: write, contents: read }
+    steps:
+      - uses: actions/checkout@v4
+      - uses: ./
+        with:
+          pipeline: ragops.demo.pipeline:pipeline
+          baseline: examples/gate/baseline.yaml
+          candidate: examples/gate/candidate-bigger-topk.yaml
+          golden: examples/gate/golden.json
+          corpus: ragops.demo.corpus:DOCS

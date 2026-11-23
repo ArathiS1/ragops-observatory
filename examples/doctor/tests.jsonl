@@ -1,0 +1,20 @@
+{"query": "How do I reset my password?", "expected_answer": "Open Settings, then Security, and click Reset password.", "expected_doc_ids": ["security.md"]}
+{"query": "How long is the password reset link valid?", "expected_answer": "The reset link is valid for 15 minutes.", "expected_doc_ids": ["security.md"]}
+{"query": "Which two-factor methods are supported?", "expected_answer": "Authenticator apps and hardware security keys that implement WebAuthn.", "expected_doc_ids": ["security.md"]}
+{"query": "Is single sign-on available?", "expected_answer": "SAML or OIDC single sign-on is available on the Enterprise plan.", "expected_doc_ids": ["security.md"]}
+{"query": "When are invoices issued?", "expected_answer": "Monthly in arrears on the first day of each month.", "expected_doc_ids": ["billing.md"]}
+{"query": "Can I get a refund on an annual plan?", "expected_answer": "Refunds are available within 30 days of a charge for annual plans.", "expected_doc_ids": ["billing.md"]}
+{"query": "Are monthly plans refundable?", "expected_answer": "Monthly plans are not refundable, but you can cancel at any time.", "expected_doc_ids": ["billing.md"]}
+{"query": "Which payment methods do you accept?", "expected_answer": "Visa, Mastercard, American Express and SEPA direct debit.", "expected_doc_ids": ["billing.md"]}
+{"query": "How many projects does the Free plan include?", "expected_answer": "The Free plan includes 3 projects.", "expected_doc_ids": ["limits.md"]}
+{"query": "What is the API rate limit on the Team plan?", "expected_answer": "500 requests per second on the Team plan.", "expected_doc_ids": ["limits.md"]}
+{"query": "What happens when I exceed the rate limit?", "expected_answer": "Requests receive HTTP status 429 with a Retry-After header.", "expected_doc_ids": ["limits.md"]}
+{"query": "What is the maximum file upload size?", "expected_answer": "2 GB per file; larger files need the multipart upload API.", "expected_doc_ids": ["limits.md"]}
+{"query": "Which regions can store my data?", "expected_answer": "Frankfurt, Dublin, Virginia or Singapore.", "expected_doc_ids": ["data.md"]}
+{"query": "Can I change my workspace region later?", "expected_answer": "No, the region cannot be changed later; contact support to migrate.", "expected_doc_ids": ["data.md"]}
+{"query": "How often are backups taken?", "expected_answer": "Backups are taken every 6 hours and kept for 35 days.", "expected_doc_ids": ["data.md"]}
+{"query": "What happens when I delete a workspace?", "expected_answer": "All data is permanently erased after a 14 day grace period.", "expected_doc_ids": ["data.md"]}
+{"query": "How fast does support respond for Enterprise customers?", "expected_answer": "Within 1 hour for priority 1 incidents, around the clock.", "expected_doc_ids": ["support.md"]}
+{"query": "How much notice is given for scheduled maintenance?", "expected_answer": "At least 72 hours in advance.", "expected_doc_ids": ["support.md"]}
+{"query": "Do you offer a student discount?", "expected_answer": "I don't know: the help center does not cover that."}
+{"query": "Do you have an office in Tokyo?", "expected_answer": "I don't know: the help center does not cover that."}
