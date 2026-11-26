@@ -2,6 +2,12 @@
 
 All notable changes follow [Keep a Changelog](https://keepachangelog.com) and [SemVer](https://semver.org).
 
+## 0.10.1
+
+- README images and links now use full URLs, so they show on PyPI.
+- New project website; docs moved to /docs/.
+- Release workflow: lowercase Docker image name, safe re-runs.
+
 ## 0.10.0
 
 First public release.

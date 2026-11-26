@@ -5,8 +5,8 @@ authors:
   - name: "Arathi S"
 type: software
 license: MIT
-version: "0.10.0"
-date-released: "2026-11-23"
+version: "0.10.1"
+date-released: "2026-11-26"
 repository-code: "https://github.com/ArathiS1/ragops-observatory"
 url: "https://arathis1.github.io/ragops-observatory/"
 keywords: [retrieval-augmented generation, LLM evaluation, LLMOps, observability, AI assurance]

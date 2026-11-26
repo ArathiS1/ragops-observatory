@@ -8,17 +8,17 @@ and hand clients a sealed **Ready / Not ready** report.
 
 [![CI](https://github.com/ArathiS1/ragops-observatory/actions/workflows/ci.yml/badge.svg)](https://github.com/ArathiS1/ragops-observatory/actions/workflows/ci.yml)
 [![PyPI](https://img.shields.io/pypi/v/ragops-observatory?label=pypi)](https://pypi.org/project/ragops-observatory/)
-[![Python](https://img.shields.io/badge/python-3.11%20%7C%203.12%20%7C%203.13-blue)](pyproject.toml)
-[![License: MIT](https://img.shields.io/badge/license-MIT-green)](LICENSE)
+[![Python](https://img.shields.io/badge/python-3.11%20%7C%203.12%20%7C%203.13-blue)](https://github.com/ArathiS1/ragops-observatory/blob/main/pyproject.toml)
+[![License: MIT](https://img.shields.io/badge/license-MIT-green)](https://github.com/ArathiS1/ragops-observatory/blob/main/LICENSE)
 [![Docs](https://img.shields.io/badge/docs-website-7b96ff)](https://arathis1.github.io/ragops-observatory/)
 
 [Website and docs](https://arathis1.github.io/ragops-observatory/) ·
 [Quickstart](#quickstart) ·
-[Case study](docs/case-studies/my-rag.md) ·
-[Field report](docs/field-report.md) ·
-[Dashboard tour](docs/dashboard.md)
+[Case study](https://github.com/ArathiS1/ragops-observatory/blob/main/docs/case-studies/my-rag.md) ·
+[Field report](https://github.com/ArathiS1/ragops-observatory/blob/main/docs/field-report.md) ·
+[Dashboard tour](https://github.com/ArathiS1/ragops-observatory/blob/main/docs/dashboard.md)
 
-![RAGOps dashboard: overview, evidence graph, failure intelligence, benchmark lab, release guardian and assurance](docs/images/demo.gif)
+![RAGOps dashboard: overview, evidence graph, failure intelligence, benchmark lab, release guardian and assurance](https://raw.githubusercontent.com/ArathiS1/ragops-observatory/main/docs/images/demo.gif)
 
 </div>
 
@@ -55,13 +55,13 @@ RAGOps Observatory answers those three, self-hosted, with any RAG stack.
 
 | Overview | Evidence graph |
 |---|---|
-| ![Overview](docs/images/overview.png) | ![Evidence graph](docs/images/evidence-graph.png) |
+| ![Overview](https://raw.githubusercontent.com/ArathiS1/ragops-observatory/main/docs/images/overview.png) | ![Evidence graph](https://raw.githubusercontent.com/ArathiS1/ragops-observatory/main/docs/images/evidence-graph.png) |
 | **Release guardian** | **Benchmark lab** |
-| ![Release guardian](docs/images/release-guardian.png) | ![Benchmark lab](docs/images/benchmark-lab.png) |
+| ![Release guardian](https://raw.githubusercontent.com/ArathiS1/ragops-observatory/main/docs/images/release-guardian.png) | ![Benchmark lab](https://raw.githubusercontent.com/ArathiS1/ragops-observatory/main/docs/images/benchmark-lab.png) |
 | **Failure intelligence** | **Assurance** |
-| ![Failure intelligence](docs/images/failure-intelligence.png) | ![Assurance](docs/images/assurance.png) |
+| ![Failure intelligence](https://raw.githubusercontent.com/ArathiS1/ragops-observatory/main/docs/images/failure-intelligence.png) | ![Assurance](https://raw.githubusercontent.com/ArathiS1/ragops-observatory/main/docs/images/assurance.png) |
 
-Light theme, cost, drift, SLOs, integrations and the RAG doctor: [dashboard tour](docs/dashboard.md).
+Light theme, cost, drift, SLOs, integrations and the RAG doctor: [dashboard tour](https://github.com/ArathiS1/ragops-observatory/blob/main/docs/dashboard.md).
 
 ## Quickstart
 
@@ -93,17 +93,17 @@ ragops assure --dataset tests.jsonl           # Ready / Not ready, root causes, 
 
 Your RAG can be a Python function or any HTTP endpoint in any language. Use any OpenAI-compatible model as the judge
 (`RAGOPS_JUDGE=openai`, plus base URL, model and key) and check it first with `ragops judge check`.
-Guide: [Test your RAG](docs/test-your-rag.md).
+Guide: [Test your RAG](https://github.com/ArathiS1/ragops-observatory/blob/main/docs/test-your-rag.md).
 
 ## Proof it works
 
 | | Setup | Result |
 |---|---|---|
-| [Case study](docs/case-studies/my-rag.md) | A real help-centre assistant (Sarvam 105B) | **Not ready → Ready**: 2 assistant bugs and 2 wrong test questions found and fixed; the guardian blocked a worse config and passed the fix (90% → 100%, p95 6.0 s → 3.8 s) |
-| [Field report](docs/field-report.md) | The same RAG in LlamaIndex, LangChain, LangGraph and Haystack | 7 LLM-judge failure modes found and fixed: measured pass rates went from 45–55% (judge noise) to 95–100% (real) |
-| [Synthetic benchmark](benchmark/RESULTS.md) | 365 cases, one injected failure each | **89.6%** correct stage, **1.8%** false alarms |
-| [SQuAD 2.0 benchmark](benchmark/SQUAD_RESULTS.md) | 2,000 cases on 30 Wikipedia articles | **73.8%** correct stage |
-| [Long-run case study](examples/case-study/CASE_STUDY.md) | A RAG service over 10 days, nothing injected | **88%** of flagged answers really wrong; **34** silent stale answers caught |
+| [Case study](https://github.com/ArathiS1/ragops-observatory/blob/main/docs/case-studies/my-rag.md) | A real help-centre assistant (Sarvam 105B) | **Not ready → Ready**: 2 assistant bugs and 2 wrong test questions found and fixed; the guardian blocked a worse config and passed the fix (90% → 100%, p95 6.0 s → 3.8 s) |
+| [Field report](https://github.com/ArathiS1/ragops-observatory/blob/main/docs/field-report.md) | The same RAG in LlamaIndex, LangChain, LangGraph and Haystack | 7 LLM-judge failure modes found and fixed: measured pass rates went from 45–55% (judge noise) to 95–100% (real) |
+| [Synthetic benchmark](https://github.com/ArathiS1/ragops-observatory/blob/main/benchmark/RESULTS.md) | 365 cases, one injected failure each | **89.6%** correct stage, **1.8%** false alarms |
+| [SQuAD 2.0 benchmark](https://github.com/ArathiS1/ragops-observatory/blob/main/benchmark/SQUAD_RESULTS.md) | 2,000 cases on 30 Wikipedia articles | **73.8%** correct stage |
+| [Long-run case study](https://github.com/ArathiS1/ragops-observatory/blob/main/examples/case-study/CASE_STUDY.md) | A RAG service over 10 days, nothing injected | **88%** of flagged answers really wrong; **34** silent stale answers caught |
 
 The benchmarks use the free rule-based judge and are honest about its limits (it misjudges paraphrases); use an LLM
 judge in production and check it on the Judge calibration page.
@@ -144,7 +144,7 @@ await rg.trace(q, { configLabel: "v3" }, async (t) => { t.context(docs); t.gener
 ```
 
 Both SDKs batch in the background, retry, never raise into your app and never block the request. Already on
-OpenTelemetry/OpenInference? Set three environment variables instead: [examples/otel](examples/otel/README.md).
+OpenTelemetry/OpenInference? Set three environment variables instead: [examples/otel](https://github.com/ArathiS1/ragops-observatory/blob/main/examples/otel/README.md).
 
 ## Gate releases in CI
 
@@ -215,14 +215,14 @@ flowchart LR
 | `RAGOPS_PIPELINE_ALLOWED_HOSTS` | – | Private hosts the server may call when testing registered RAG endpoints |
 | `RAGOPS_REDIS_URL` | – | Instant job dispatch through Arq/Redis (Postgres still stores every job) |
 | `RAGOPS_AUTO_MIGRATE` | `true` | Upgrade the PostgreSQL schema on start (set `false` when a migration job runs it) |
-| `RAGOPS_OIDC_ISSUER` / `_CLIENT_ID` / `_CLIENT_SECRET` | – | Single sign-on; see [deployment](docs/deployment.md#single-sign-on-oidc) |
+| `RAGOPS_OIDC_ISSUER` / `_CLIENT_ID` / `_CLIENT_SECRET` | – | Single sign-on; see [deployment](https://github.com/ArathiS1/ragops-observatory/blob/main/docs/deployment.md#single-sign-on-oidc) |
 | `RAGOPS_PUBLIC_URL` | – | External URL for SSO redirects and links in alerts |
 | `RAGOPS_REDACTOR` | `regex` | `regex` or `presidio` |
 | `RAGOPS_SMTP_HOST` … | – | E-mail alerts (`_PORT`, `_USER`, `_PASSWORD`, `_SECURITY`, `_FROM`) |
 | `RAGOPS_INLINE_JOBS` | `false` | Process jobs inside the API (single-process mode) |
 
 Per-project settings (sampling, judge budget, redaction, retention, thresholds, auto-golden rule) live on the UI's
-**Settings** page. More: [docs/](docs/index.md).
+**Settings** page. More: [docs/](https://github.com/ArathiS1/ragops-observatory/blob/main/docs/index.md).
 
 ## Repository layout
 
@@ -261,11 +261,11 @@ deploy/helm/           Helm chart          docs/   MkDocs site          tests/  
 
 ## Contributing
 
-Issues and pull requests are welcome: see [CONTRIBUTING.md](CONTRIBUTING.md), the [code of conduct](CODE_OF_CONDUCT.md)
-and [SUPPORT.md](SUPPORT.md). Security reports: [SECURITY.md](SECURITY.md). Release process: [docs/releasing.md](docs/releasing.md).
+Issues and pull requests are welcome: see [CONTRIBUTING.md](https://github.com/ArathiS1/ragops-observatory/blob/main/CONTRIBUTING.md), the [code of conduct](https://github.com/ArathiS1/ragops-observatory/blob/main/CODE_OF_CONDUCT.md)
+and [SUPPORT.md](https://github.com/ArathiS1/ragops-observatory/blob/main/SUPPORT.md). Security reports: [SECURITY.md](https://github.com/ArathiS1/ragops-observatory/blob/main/SECURITY.md). Release process: [docs/releasing.md](https://github.com/ArathiS1/ragops-observatory/blob/main/docs/releasing.md).
 
-If you use RAGOps in a report or paper, please cite it ([CITATION.cff](CITATION.cff)).
+If you use RAGOps in a report or paper, please cite it ([CITATION.cff](https://github.com/ArathiS1/ragops-observatory/blob/main/CITATION.cff)).
 
 ## License
 
-[MIT](LICENSE) © 2026 Arathi S. SQuAD 2.0 (CC BY-SA 4.0) is downloaded at benchmark time, not redistributed.
+[MIT](https://github.com/ArathiS1/ragops-observatory/blob/main/LICENSE) © 2026 Arathi S. SQuAD 2.0 (CC BY-SA 4.0) is downloaded at benchmark time, not redistributed.

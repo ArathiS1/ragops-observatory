@@ -1,6 +1,6 @@
 {
   "name": "@ragops/sdk",
-  "version": "0.10.0",
+  "version": "0.10.1",
   "description": "TypeScript/JavaScript SDK for RAGOps Observatory: trace RAG calls, send feedback, register pipelines and run tests.",
   "license": "MIT",
   "type": "module",
